@@ -60,7 +60,7 @@ function ProductPage() {
 				🛒 Carrito: {productosAgregados}
 			</div>
 
-			<div className='mb-6'>
+			<div className='mb-6 relative'>
 				<input
 					type='text'
 					className='w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-lg focus:border-blue-500 focus:outline-none'
@@ -69,6 +69,15 @@ function ProductPage() {
 					onChange={(e) => setBusqueda(e.target.value)}
 					// sincronizar input con estado (Inputs controlados)
 				/>
+
+				{busqueda && (
+					<button
+						onClick={() => setBusqueda('')}
+						className='absolute right-4 top-4 text-gray-400 hover:text-gray-600 cursor-pointer'
+					>
+						X
+					</button>
+				)}
 			</div>
 
 			{/* Grid: organiza los productos en columnas */}
