@@ -67,6 +67,7 @@ function ProductPage() {
 					placeholder='🔍 Buscar productos...'
 					value={busqueda}
 					onChange={(e) => setBusqueda(e.target.value)}
+					// sincronizar input con estado (Inputs controlados)
 				/>
 			</div>
 
@@ -98,6 +99,18 @@ function ProductPage() {
 					</div>
 				))}
 			</div>
+
+			{/* 🆕 NUEVO: Mensaje cuando no hay resultados */}
+			{productosFiltrados.length === 0 && (
+				<div className='text-center py-12'>
+					<p className='text-2xl text-gray-400'>
+						😕 No se encontraron productos
+					</p>
+					<p className='text-gray-500 mt-2'>
+						Intenta con otro término de búsqueda
+					</p>
+				</div>
+			)}
 		</div>
 	)
 }
