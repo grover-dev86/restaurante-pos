@@ -9,6 +9,7 @@ function ProductPage() {
   // productosAgregados = el número actual
   // setProductosAgregados = función para cambiar ese número
 	const [productosAgregados, setProductosAgregados] = useState(0)
+	const [busqueda, setBusqueda] = useState('')
 	
 	// Datos de prueba (más adelante vendrán de la base de datos)
 	const productos = [
@@ -32,6 +33,16 @@ function ProductPage() {
 		}
 	]
 
+	// 🆕 NUEVO: Filtrar productos según lo que escriba el usuario
+	const productosFiltrados = productos.filter(producto => {
+		// Convertimos todo a minúsculas para que no importe mayúsculas/minúsculas
+		const nombreMinusculas = producto.nombre.toLowerCase()
+		const busquedaMinusculas = busqueda.toLowerCase()
+
+		// Preguntamos: ¿el nombre del producto incluye lo que busco?
+		return nombreMinusculas.includes(busquedaMinusculas)
+	})
+
 	const agregarAlCarrito = (nombreProducto: string) => {
 		setProductosAgregados(productosAgregados + 1)
 
@@ -49,10 +60,20 @@ function ProductPage() {
 				🛒 Carrito: {productosAgregados}
 			</div>
 
+			<div className='mb-6'>
+				<input
+					type='text'
+					className='w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-lg focus:border-blue-500 focus:outline-none'
+					placeholder='🔍 Buscar productos...'
+					value={busqueda}
+					onChange={(e) => setBusqueda(e.target.value)}
+				/>
+			</div>
+
 			{/* Grid: organiza los productos en columnas */}
 			<div className='grid grid-cols-3 gap-4'>
 				{/* .map() recorre el array y crea una tarjeta por cada producto */}
-				{productos.map(producto => (
+				{productosFiltrados.map(producto => (
 					<div
 						key={producto.id}
 						className='border rounded-lg p-4 shadow hover:shadow-lg'
