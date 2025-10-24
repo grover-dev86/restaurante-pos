@@ -78,6 +78,12 @@ function ProductPage() {
 		alert(`✅ ${nombreProducto} agregado al carrito`)
 	}
 
+	console.log('=== DEBUG ===')
+	console.log('categoriaSeleccionada: ', categoriaSeleccionada)
+	console.log('busqueda: ', busqueda)
+	console.log('busqueda es vacío? ', !busqueda)
+	console.log('Condición completa: ', categoriaSeleccionada === 'todas' && !busqueda)
+
 	return (
 		<div className='p-8'>
 			<h1 className='text-3xl font-bold mb-6'>
@@ -98,6 +104,13 @@ function ProductPage() {
 					onChange={(e) => setBusqueda(e.target.value)}
 					// sincronizar input con estado (Inputs controlados)
 				/>
+
+				<p className='text-gray-600 mt-2'>
+					{categoriaSeleccionada === 'todas' && !busqueda // !busqueda => si búsqueda está vacía es true
+						? `Mostrando todos los productos (${productosFiltrados.length})`
+						: `Encontrados: ${productosFiltrados.length} de ${productos.length} productos`
+					}
+				</p>
 
 				{busqueda && (
 					<button
