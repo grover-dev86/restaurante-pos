@@ -10,6 +10,8 @@ function ProductPage() {
   // setProductosAgregados = función para cambiar ese número
 	const [productosAgregados, setProductosAgregados] = useState(0)
 	const [busqueda, setBusqueda] = useState('')
+	// estado para la categoría seleccionada
+	const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('todas')
 	
 	// Datos de prueba (más adelante vendrán de la base de datos)
 	const productos = [
@@ -17,20 +19,45 @@ function ProductPage() {
 			id: 1,
 			nombre: 'Pizza Margarita',
 			precio: 10.50,
-			descripcion: 'Deliciosa pizza con queso mozzarella'
+			descripcion: 'Deliciosa pizza con queso mozzarella',
+			categoria: 'pizzas'
 		},
 				{
 			id: 2,
 			nombre: 'Hamburguesa Clásica',
 			precio: 8,
-			descripcion: 'Deliciosa pizza con queso mozzarella'
+			descripcion: 'Deliciosa pizza con queso mozzarella',
+			categoria: 'comida'
 		},
 		{
 			id: 3,
 			nombre: 'Tacos al Pastor',
 			precio: 5.50,
-			descripcion: 'Tres tacos con carne al pastor'
+			descripcion: 'Tres tacos con carne al pastor',
+			categoria: 'comida'
+		},
+		{
+			id: 4,
+			nombre: 'Pizza Pepperoni',
+			precio: 12.00,
+			descripcion: 'Pizza con pepperoni y extra queso',
+			categoria: 'pizzas'
+		},
+		{
+			id: 5,
+			nombre: 'Ensalada César',
+			precio: 7.50,
+			descripcion: 'Ensalada fresca con aderezo césar',
+			categoria: 'ensaladas'
 		}
+	]
+
+	// definimos las categorias disponibles
+	const categorias = [
+		{id: 'todas', nombre: 'Todas', emoji: '📦'},
+		{id: 'pizzas', nombre: 'Pizzas', emoji: '🍕'},
+		{id: 'comida', nombre: 'Comida', emoji: '🍔'},
+		{id: 'ensaladas', nombre: 'Ensaladas', emoji: '🥗'},
 	]
 
 	// 🆕 NUEVO: Filtrar productos según lo que escriba el usuario
@@ -38,9 +65,11 @@ function ProductPage() {
 		// Convertimos todo a minúsculas para que no importe mayúsculas/minúsculas
 		const nombreMinusculas = producto.nombre.toLowerCase()
 		const busquedaMinusculas = busqueda.toLowerCase()
+		const cumpleBusqueda = nombreMinusculas.includes(busquedaMinusculas)
+		const cumpleCategoria = categoriaSeleccionada === 'todas' || producto.categoria === categoriaSeleccionada
 
-		// Preguntamos: ¿el nombre del producto incluye lo que busco?
-		return nombreMinusculas.includes(busquedaMinusculas)
+		// Se deben cumplir ambos filtros
+		return cumpleBusqueda && cumpleCategoria
 	})
 
 	const agregarAlCarrito = (nombreProducto: string) => {
@@ -80,6 +109,24 @@ function ProductPage() {
 				)}
 			</div>
 
+			{/* botones de categorias */}
+			<div className='mb-6 flex gap-2'>
+				{categorias.map(categoria => (
+					<button
+						key={categoria.id}
+						onClick={() => setCategoriaSeleccionada(categoria.id)}
+						className={
+							`px-4 py-2 rounded-lg font-medium transition-all
+							${categoriaSeleccionada === categoria.id
+								? 'bg-blue-500 text-white shadow-lg scale-105'
+								: 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`
+						}
+					>
+						{categoria.emoji} {categoria.nombre}
+					</button>
+				))}
+			</div>
+
 			{/* Grid: organiza los productos en columnas */}
 			<div className='grid grid-cols-3 gap-4'>
 				{/* .map() recorre el array y crea una tarjeta por cada producto */}
@@ -91,6 +138,11 @@ function ProductPage() {
 						<h2 className='text-xl font-semibold mb-2'>
 							{producto.nombre}
 						</h2>
+
+						{/* badge de categoría */}
+						<span className='inline-block bg-purple-100 text-purple-700 text-xs px-2 py-1 rounded-full mb-2'>
+							{producto.categoria}
+						</span>
 
 						<p className='text-gray-600 mb-3'>
 							{producto.descripcion}
