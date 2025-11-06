@@ -3,18 +3,32 @@
 
 import { useState } from 'react'
 
+interface ProductoBase {
+	id: number
+	nombre: string
+	precio: number
+}
+
+interface Producto extends ProductoBase {
+	descripcion: string
+	categoria: string
+}
+
+interface ItemCarrito extends ProductoBase {
+	cantidad: number
+	subtotal: number
+}
+
 function ProductPage() {
 
-	// useState: Guarda un número que representa cuántos productos agregamos
-  // productosAgregados = el número actual
-  // setProductosAgregados = función para cambiar ese número
 	const [productosAgregados, setProductosAgregados] = useState(0)
 	const [busqueda, setBusqueda] = useState('')
-	// estado para la categoría seleccionada
 	const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('todas')
+	const [carrito, setCarrito] = useState<ItemCarrito[]>([])
+	const [mostrarCarrito, setMostrarCarrito] = useState(false)
 	
 	// Datos de prueba (más adelante vendrán de la base de datos)
-	const productos = [
+	const productos: Producto[] = [
 		{
 			id: 1,
 			nombre: 'Pizza Margarita',
@@ -72,10 +86,31 @@ function ProductPage() {
 		return cumpleBusqueda && cumpleCategoria
 	})
 
-	const agregarAlCarrito = (nombreProducto: string) => {
-		setProductosAgregados(productosAgregados + 1)
+	const agregarAlCarrito = (producto: Producto) => {
+		// Buscar si el producto existe en el carrito
+		const productoExiste = carrito.find(item => item.id === producto.id)
 
-		alert(`✅ ${nombreProducto} agregado al carrito`)
+		if (productoExiste) {
+			// Si ya existe, aumentar la cantidad
+			const carritoActualizado = carrito.map(item =>
+				item.id === producto.id
+					? {
+						...item,
+						cantidad: item.cantidad + 1
+					}
+					: item
+			)
+			setCarrito(carritoActualizado)
+		} else {
+			// Si no existe, agregarlo como nuevo
+			const nuevoItem: ItemCarrito = {
+				...producto,  // ← Copia: id, nombre, precio, descripcion, categoria
+				cantidad: 1,	// ← Agrega cantidad
+				subtotal: producto.precio	// ← Agrega cantidad
+			}
+			setCarrito([...carrito, nuevoItem])
+		}
+		alert(`✅ ${producto.nombre} agregado al carrito`)
 	}
 
 	console.log('=== DEBUG ===')
@@ -167,7 +202,7 @@ function ProductPage() {
 
 						<button
 							className='w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition cursor-pointer'
-							onClick={() => agregarAlCarrito(producto.nombre)}>
+							onClick={() => agregarAlCarrito(producto)}>
 							Agregar al carrito
 						</button>
 					</div>
