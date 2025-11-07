@@ -86,6 +86,10 @@ function ProductPage() {
 		return cumpleBusqueda && cumpleCategoria
 	})
 
+	// =================================================
+	// 🛒 FUNCIONES DEL CARRITO
+	// =================================================
+
 	const agregarAlCarrito = (producto: Producto) => {
 		// Buscar si el producto existe en el carrito
 		const productoExiste = carrito.find(item => item.id === producto.id)
@@ -113,11 +117,13 @@ function ProductPage() {
 		alert(`✅ ${producto.nombre} agregado al carrito`)
 	}
 
-	console.log('=== DEBUG ===')
-	console.log('categoriaSeleccionada: ', categoriaSeleccionada)
-	console.log('busqueda: ', busqueda)
-	console.log('busqueda es vacío? ', !busqueda)
-	console.log('Condición completa: ', categoriaSeleccionada === 'todas' && !busqueda)
+	// Cálculos
+	const totalItems = carrito.reduce((total, item) => total + item.cantidad, 0)
+
+
+	// =================================================
+	// 🎨 RENDER
+	// =================================================
 
 	return (
 		<div className='p-8'>
@@ -126,9 +132,19 @@ function ProductPage() {
 			</h1>
 
 			{/* Contador de productos agregados */}
-			<div className='bg-blue-500 text-white px-4 py-2 rounded-full mb-4'>
-				🛒 Carrito: {productosAgregados}
-			</div>
+			<button
+				className='relative bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition'
+				onClick={() => setMostrarCarrito(!mostrarCarrito)}
+			>
+				🛒 Carrito
+				{totalItems > 0 && (
+					<span
+						className='absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold'
+					>
+						{totalItems}
+					</span>
+				)}
+			</button>
 
 			<div className='mb-6 relative'>
 				<input
