@@ -120,11 +120,20 @@ function ProductPage() {
 			}
 			setCarrito([...carrito, nuevoItem])
 		}
-		alert(`✅ ${producto.nombre} agregado al carrito`)
 	}
 
-	// Cálculos
+	 // =================================================
+  // 🧮 CÁLCULOS DEL CARRITO
+	// =================================================
+	
+	// Total de items (suma de todas las cantidades)
 	const totalItems = carrito.reduce((total, item) => total + item.cantidad, 0)
+	// Subtotal (suma de todos los subtotales)
+	const subTotal = carrito.reduce((total, item) => total + item.subtotal, 0)
+	// IGV (18%)
+	const igv = subTotal * 0.18
+	// Total final
+	const total = subTotal + igv
 
 
 	// =================================================
@@ -343,6 +352,50 @@ function ProductPage() {
 											</div>
 										</div>
 									))}
+								</div>
+
+								{/* ==========================================
+                  💰 RESUMEN DE TOTALES
+                	========================================== */}
+								<div className='border-t-2 border-gray-200 pt-4 space-y-3'>
+									{/* Subtotal */}
+									<div className='flex justify-between text-gray-700'>
+										<span className='font-medium'>Subtotal: </span>
+										<span className='font-semibold'>
+											S/ {subTotal.toFixed(2)}
+										</span>
+									</div>
+
+									{/* IGV */}
+									<div className='flex justify-between text-gray-700'>
+										<span className='font-medium'>IGV (18%):</span>
+										<span className='font-semibold'>
+											S/ {igv.toFixed(2)}
+										</span>
+									</div>
+
+									{/* Total */}
+									<div className='flex justify-between text-xl font-bold border-t-2 border-gray-300 pt-3'>
+										<span>Total:</span>
+										<span className='text-green-600'>
+											S/ {total.toFixed(2)}
+										</span>
+									</div>
+								</div>
+
+								{/* ==========================================
+										🎬 BOTONES DE ACCIÓN
+										========================================== */}
+								<div className='mt-6 space-y-3'>
+									{/* Botón proceder al pago */}
+									<button className='w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition font-bold text-lg shadow-lg hover:shadow-xl'>
+										💳 Proceder al pago
+									</button>
+									
+									{/* Botón vaciar carrito */}
+									<button className='w-full bg-red-100 text-red-600 py-2 rounded-lg hover:bg-red-200 transition font-medium'>
+										🗑️ Vaciar carrito
+									</button>
 								</div>
 							</>
 					)}
