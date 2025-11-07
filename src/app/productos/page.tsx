@@ -105,7 +105,8 @@ function ProductPage() {
 				item.id === producto.id
 					? {
 						...item,
-						cantidad: item.cantidad + 1
+						cantidad: item.cantidad + 1,
+						subtotal: (item.cantidad + 1) * item.precio
 					}
 					: item
 			)
