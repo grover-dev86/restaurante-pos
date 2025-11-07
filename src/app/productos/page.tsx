@@ -19,9 +19,14 @@ interface ItemCarrito extends ProductoBase {
 	subtotal: number
 }
 
+interface Categoria {
+	id: string
+	nombre: string
+	emoji: string
+}
+
 function ProductPage() {
 
-	const [productosAgregados, setProductosAgregados] = useState(0)
 	const [busqueda, setBusqueda] = useState('')
 	const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('todas')
 	const [carrito, setCarrito] = useState<ItemCarrito[]>([])
@@ -67,7 +72,7 @@ function ProductPage() {
 	]
 
 	// definimos las categorias disponibles
-	const categorias = [
+	const categorias: Categoria[] = [
 		{id: 'todas', nombre: 'Todas', emoji: '📦'},
 		{id: 'pizzas', nombre: 'Pizzas', emoji: '🍕'},
 		{id: 'comida', nombre: 'Comida', emoji: '🍔'},
