@@ -265,6 +265,9 @@ function ProductPage() {
 				overflow-y-auto
 			`}>
 				<div className='p-6'>
+					 {/* ==========================================
+							📋 HEADER DEL CARRITO
+						========================================== */}
 					<div className='flex justify-between items-center mb-6'>
 						<h2 className='text-2xl font-bold'>
 							🛒 Mi Carrito
@@ -276,6 +279,73 @@ function ProductPage() {
 							✕
 						</button>
 					</div>
+
+					{/* ==========================================
+						📦 CONTENIDO DEL CARRITO
+					========================================== */}
+					{carrito.length === 0 ? (
+						// ==========================================
+						// 🎯 CARRITO VACÍO
+						// ==========================================
+						<div className='text-center py-12'>
+							<p className='text-6xl mb-4'>🛒</p>
+							<p className='text-gray-500 text-lg'>
+								Tu carrito está vacío
+							</p>
+							<p className='text-sm text-gray-400 mt-2'>
+								Agrega productos para comenzar
+							</p>
+						</div>
+					) : (
+							// ==========================================
+							// 🎯 CARRITO CON PRODUCTOS
+							// ==========================================
+							<>
+								<div className='space-y-4 mb-6'>
+									{carrito.map(item => (
+										<div
+											key={item.id}
+											className='border border-gray-200 rounded-lg p-4 hover:shadow-md transition'
+										>
+											<div className='flex justify-between items-start mb-2'>
+												<h3 className='font-semibold text-gray-800'>
+													{item.nombre}
+												</h3>
+												<button
+													className='text-red-500 hover:text-red-700 text-xl'
+													title='Eliminar'
+												>
+													🗑️
+												</button>
+											</div>
+
+											<p className='text-sm text-gray-600 mb-3'>
+												S/ {item.precio.toFixed(2)} c/u
+											</p>
+
+											{/* Controles de cantidad y subtotal */}
+											<div className='flex items-center justify-between'>
+												{/* Botones +/- y cantidad */}
+												<div className='flex items-center gap-2'>
+													<button className='bg-gray-200 hover:bg-gray-300 w-8 h-8 rounded-full font-bold transition'>
+														-
+													</button>
+													<span className='font-bold text-lg w-8 text-center'>
+														{item.cantidad}
+													</span>
+													<button className='bg-gray-200 hover:bg-gray-300 w-8 h-8 rounded-full font-bold transition'>
+														+
+													</button>
+												</div>
+
+												{/* Subtotal del item */}
+												<p>{item.subtotal.toFixed(2)}</p>
+											</div>
+										</div>
+									))}
+								</div>
+							</>
+					)}
 				</div>
 			</div>
 		</div>
