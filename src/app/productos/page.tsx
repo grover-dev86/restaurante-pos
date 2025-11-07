@@ -141,9 +141,7 @@ function ProductPage() {
 					>
 						🛒 Carrito
 						{totalItems > 0 && (
-							<span
-								className='absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold'
-							>
+							<span className='absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold'>
 								{totalItems}
 							</span>
 						)}
@@ -151,96 +149,104 @@ function ProductPage() {
 				</div>
 			</div>
 
-			<div className='mb-6 relative'>
-				<input
-					type='text'
-					className='w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-lg focus:border-blue-500 focus:outline-none'
-					placeholder='🔍 Buscar productos...'
-					value={busqueda}
-					onChange={(e) => setBusqueda(e.target.value)}
-					// sincronizar input con estado (Inputs controlados)
-				/>
+			<div className='max-w-7xl mx-auto p-4 md:p-8'>
+				<div className='flex flex-col lg:flex-row gap-6'>
+					{/* Columna de productos */}
+					<div className='flex-1'>
+						{/* Búsqueda */}
+						<div className='mb-6 relative'>
+							<input
+								type='text'
+								className='w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-lg focus:border-blue-500 focus:outline-none'
+								placeholder='🔍 Buscar productos...'
+								value={busqueda}
+								onChange={(e) => setBusqueda(e.target.value)}
+								// sincronizar input con estado (Inputs controlados)
+							/>
 
-				<p className='text-gray-600 mt-2'>
-					{categoriaSeleccionada === 'todas' && !busqueda // !busqueda => si búsqueda está vacía es true
-						? `Mostrando todos los productos (${productosFiltrados.length})`
-						: `Encontrados: ${productosFiltrados.length} de ${productos.length} productos`
-					}
-				</p>
+							<p className='text-gray-600 mt-2 text-sm md:text-base'>
+								{categoriaSeleccionada === 'todas' && !busqueda // !busqueda => si búsqueda está vacía es true
+									? `Mostrando todos los productos (${productosFiltrados.length})`
+									: `Encontrados: ${productosFiltrados.length} de ${productos.length} productos`
+								}
+							</p>
 
-				{busqueda && (
-					<button
-						onClick={() => setBusqueda('')}
-						className='absolute right-4 top-4 text-gray-400 hover:text-gray-600 cursor-pointer'
-					>
-						X
-					</button>
-				)}
-			</div>
+							{busqueda && (
+								<button
+									onClick={() => setBusqueda('')}
+									className='absolute right-4 top-4 text-gray-400 hover:text-gray-600 cursor-pointer'
+								>
+									X
+								</button>
+							)}
+						</div>
 
-			{/* botones de categorias */}
-			<div className='mb-6 flex gap-2'>
-				{categorias.map(categoria => (
-					<button
-						key={categoria.id}
-						onClick={() => setCategoriaSeleccionada(categoria.id)}
-						className={
-							`px-4 py-2 rounded-lg font-medium transition-all
-							${categoriaSeleccionada === categoria.id
-								? 'bg-blue-500 text-white shadow-lg scale-105'
-								: 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`
-						}
-					>
-						{categoria.emoji} {categoria.nombre}
-					</button>
-				))}
-			</div>
+						{/* botones de categorias */}
+						<div className='mb-6 flex flex-wrap gap-2'>
+							{categorias.map(categoria => (
+								<button
+									key={categoria.id}
+									onClick={() => setCategoriaSeleccionada(categoria.id)}
+									className={
+										`px-3 py-2 md:px-4 rounded-lg font-medium transition-all text-sm md:text-base
+										${categoriaSeleccionada === categoria.id
+											? 'bg-blue-500 text-white shadow-lg scale-105'
+											: 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`
+									}
+								>
+									{categoria.emoji} {categoria.nombre}
+								</button>
+							))}
+						</div>
 
-			{/* Grid: organiza los productos en columnas */}
-			<div className='grid grid-cols-3 gap-4'>
-				{/* .map() recorre el array y crea una tarjeta por cada producto */}
-				{productosFiltrados.map(producto => (
-					<div
-						key={producto.id}
-						className='border rounded-lg p-4 shadow hover:shadow-lg'
-					>
-						<h2 className='text-xl font-semibold mb-2'>
-							{producto.nombre}
-						</h2>
+						{/* Grid: organiza los productos en columnas */}
+						<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
+							{/* .map() recorre el array y crea una tarjeta por cada producto */}
+							{productosFiltrados.map(producto => (
+								<div
+									key={producto.id}
+									className='bg-white border border-gray-300 rounded-lg p-4 shadow hover:shadow-lg transition'
+								>
+									<h2 className='text-lg md:text-xl font-semibold mb-2'>
+										{producto.nombre}
+									</h2>
 
-						{/* badge de categoría */}
-						<span className='inline-block bg-purple-100 text-purple-700 text-xs px-2 py-1 rounded-full mb-2'>
-							{producto.categoria}
-						</span>
+									{/* badge de categoría */}
+									<span className='inline-block bg-purple-100 text-purple-700 text-xs px-2 py-1 rounded-full mb-2'>
+										{producto.categoria}
+									</span>
 
-						<p className='text-gray-600 mb-3'>
-							{producto.descripcion}
-						</p>
-						
-						<p className='text-2xl font-bold text-green-600'>
-							S/ {producto.precio.toFixed(2)}
-						</p>
+									<p className='text-gray-600 text-sm mb-3'>
+										{producto.descripcion}
+									</p>
+									
+									<p className='text-xl md:text-2xl font-bold text-green-600 mb-3'>
+										S/ {producto.precio.toFixed(2)}
+									</p>
 
-						<button
-							className='w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition cursor-pointer'
-							onClick={() => agregarAlCarrito(producto)}>
-							Agregar al carrito
-						</button>
+									<button
+										className='w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition cursor-pointer'
+										onClick={() => agregarAlCarrito(producto)}>
+										Agregar al carrito
+									</button>
+								</div>
+							))}
+						</div>
+
+						{/* No hay resultados */}
+						{productosFiltrados.length === 0 && (
+							<div className='text-center py-12'>
+								<p className='text-2xl text-gray-400'>
+									😕 No se encontraron productos
+								</p>
+								<p className='text-gray-500 mt-2'>
+									Intenta con otro término de búsqueda
+								</p>
+							</div>
+						)}
 					</div>
-				))}
-			</div>
-
-			{/* 🆕 NUEVO: Mensaje cuando no hay resultados */}
-			{productosFiltrados.length === 0 && (
-				<div className='text-center py-12'>
-					<p className='text-2xl text-gray-400'>
-						😕 No se encontraron productos
-					</p>
-					<p className='text-gray-500 mt-2'>
-						Intenta con otro término de búsqueda
-					</p>
 				</div>
-			)}
+			</div>
 		</div>
 	)
 }
