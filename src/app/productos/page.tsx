@@ -126,25 +126,30 @@ function ProductPage() {
 	// =================================================
 
 	return (
-		<div className='p-8'>
-			<h1 className='text-3xl font-bold mb-6'>
-				📦 Lista de Productos
-			</h1>
+		<div className='min-h-screen bg-gray-50'>
+			{/* Header */}
+			<div className='bg-white shadow-sm sticky top-0 z-10 p-4'>
+				<div className='max-w-7xl mx-auto flex justify-between items-center'>
+					<h1 className='text-2xl md:text-3xl font-bold'>
+						📦 Productos
+					</h1>
 
-			{/* Contador de productos agregados */}
-			<button
-				className='relative bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition'
-				onClick={() => setMostrarCarrito(!mostrarCarrito)}
-			>
-				🛒 Carrito
-				{totalItems > 0 && (
-					<span
-						className='absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold'
+					{/* Contador de productos agregados */}
+					<button
+						className='relative bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition'
+						onClick={() => setMostrarCarrito(!mostrarCarrito)}
 					>
-						{totalItems}
-					</span>
-				)}
-			</button>
+						🛒 Carrito
+						{totalItems > 0 && (
+							<span
+								className='absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold'
+							>
+								{totalItems}
+							</span>
+						)}
+					</button>
+				</div>
+			</div>
 
 			<div className='mb-6 relative'>
 				<input
