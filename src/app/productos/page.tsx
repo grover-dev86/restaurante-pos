@@ -156,6 +156,11 @@ function ProductPage() {
 		setCarrito(carritoFiltrado)
 	}
 
+	const eliminarDelCarrito = (id: number) => {
+		const carritoActualizado = carrito.filter(item => item.id !== id)
+		setCarrito(carritoActualizado)
+	}
+
 	 // =================================================
   // 🧮 CÁLCULOS DEL CARRITO
 	// =================================================
@@ -357,6 +362,7 @@ function ProductPage() {
 												<button
 													className='text-red-500 hover:text-red-700 text-xl'
 													title='Eliminar'
+													onClick={() => eliminarDelCarrito(item.id)}
 												>
 													🗑️
 												</button>
