@@ -161,6 +161,12 @@ function ProductPage() {
 		setCarrito(carritoActualizado)
 	}
 
+	const vaciarCarrito = () => {
+		if (confirm('¿Estás seguro de vaciar el carrito?')) {
+			setCarrito([])
+		}
+	}
+
 	 // =================================================
   // 🧮 CÁLCULOS DEL CARRITO
 	// =================================================
@@ -439,7 +445,10 @@ function ProductPage() {
 									</button>
 									
 									{/* Botón vaciar carrito */}
-									<button className='w-full bg-red-100 text-red-600 py-2 rounded-lg hover:bg-red-200 transition font-medium'>
+									<button
+										className='w-full bg-red-100 text-red-600 py-2 rounded-lg hover:bg-red-200 transition font-medium'
+										onClick={vaciarCarrito}
+									>
 										🗑️ Vaciar carrito
 									</button>
 								</div>
