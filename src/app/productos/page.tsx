@@ -122,6 +122,25 @@ function ProductPage() {
 		}
 	}
 
+	const aumentarCantidad = (id: number) => {
+		// 🎓 EXPLICACIÓN:
+		// 1. Recorremos todos los items del carrito
+		// 2. Si encontramos el que queremos (por id), le sumamos 1
+		// 3. Recalculamos el subtotal
+		// 4. Los demás items quedan igual
+		const carritoActualizado = carrito.map(item => (
+			// Compara el id del producto que está recorriendo el .map() (conocido como item.id) con el id que se recibe al hacer clic en el botón +
+			item.id === id
+				? {
+					...item,
+					cantidad: item.cantidad + 1,
+					subtotal: (item.cantidad + 1) * item.precio
+				}
+				: item
+		))
+		setCarrito(carritoActualizado)
+	}
+
 	 // =================================================
   // 🧮 CÁLCULOS DEL CARRITO
 	// =================================================
@@ -342,7 +361,10 @@ function ProductPage() {
 													<span className='font-bold text-lg w-8 text-center'>
 														{item.cantidad}
 													</span>
-													<button className='bg-gray-200 hover:bg-gray-300 w-8 h-8 rounded-full font-bold transition'>
+													<button
+														className='bg-gray-200 hover:bg-gray-300 w-8 h-8 rounded-full font-bold transition'
+														onClick={() => aumentarCantidad(item.id)}
+													>
 														+
 													</button>
 												</div>
