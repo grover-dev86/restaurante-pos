@@ -141,6 +141,21 @@ function ProductPage() {
 		setCarrito(carritoActualizado)
 	}
 
+	const disminuirCantidad = (id: number) => {
+		const carritoActualizado = carrito.map(item => (
+		item.id === id
+			? {
+				...item,
+				cantidad: item.cantidad - 1,
+				subtotal: (item.cantidad - 1) * item.precio
+			}
+			: item
+		))
+		// Filtrar items con cantidad > 0
+		const carritoFiltrado = carritoActualizado.filter(item => item.cantidad > 0)
+		setCarrito(carritoFiltrado)
+	}
+
 	 // =================================================
   // 🧮 CÁLCULOS DEL CARRITO
 	// =================================================
@@ -355,7 +370,10 @@ function ProductPage() {
 											<div className='flex items-center justify-between'>
 												{/* Botones +/- y cantidad */}
 												<div className='flex items-center gap-2'>
-													<button className='bg-gray-200 hover:bg-gray-300 w-8 h-8 rounded-full font-bold transition'>
+													<button
+														className='bg-gray-200 hover:bg-gray-300 w-8 h-8 rounded-full font-bold transition'
+														onClick={() => disminuirCantidad(item.id)}
+													>
 														-
 													</button>
 													<span className='font-bold text-lg w-8 text-center'>
