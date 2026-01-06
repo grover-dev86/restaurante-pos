@@ -1,0 +1,546 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================
+// 👤 USUARIOS Y AUTENTICACIÓN
+// ==========================================
+
+model User {
+  id               String    @id @default(cuid())
+  email            String    @unique
+  name             String
+  password         String // Hashed con bcrypt
+  avatar           String?
+  phone            String?
+  roleId           String
+  role             Role      @relation(fields: [roleId], references: [id])
+  isActive         Boolean   @default(true)
+  emailVerified    DateTime?
+  twoFactorEnabled Boolean   @default(false)
+  twoFactorSecret  String?
+  lastLoginAt      DateTime?
+  lastLoginIp      String?
+
+  // Relaciones
+  sales            Sale[]
+  activities       Activity[]
+  receivings       Receiving[]
+  adjustments      Adjustment[]
+  expenses         Expense[]
+  notifications    Notification[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@index([roleId])
+}
+
+model Role {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  displayName String
+  description String?
+  permissions Permission[]
+  users       User[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Permission {
+  id          String @id @default(cuid())
+  resource    String // 'products', 'sales', 'users'
+  action      String // 'create', 'read', 'update', 'delete'
+  description String
+  roles       Role[]
+
+  @@unique([resource, action])
+}
+
+// ==========================================
+// 📦 CATEGORÍAS Y PRODUCTOS
+// ==========================================
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  slug        String    @unique
+  description String?
+  image       String?
+  order       Int       @default(0)
+  isActive    Boolean   @default(true)
+  parentId    String?
+  parent      Category? @relation("CategoryTree", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryTree")
+  products    Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Product {
+  id          String         @id @default(cuid())
+  name        String         @unique
+  slug        String         @unique
+  barcode     String?        @unique
+  description String?
+  categoryId  String
+  category    Category       @relation(fields: [categoryId], references: [id])
+  prices      ProductPrice[]
+  images      ProductImage[]
+  stock       Int            @default(0)
+  minStock    Int            @default(5)
+  isActive    Boolean        @default(true)
+  isArchived  Boolean        @default(false)
+
+  // Relaciones
+  saleItems       SaleItem[]
+  orderItems      OrderItem[]
+  receivingItems  ReceivingItem[]
+  adjustmentItems AdjustmentItem[]
+  inventoryLogs   InventoryLog[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([categoryId])
+  @@index([name])
+  @@index([barcode])
+  @@index([isActive, isArchived])
+}
+
+model ProductPrice {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  title     String // 'Pequeño', 'Mediano', 'Grande'
+  price     Decimal @db.Decimal(10, 2)
+  isDefault Boolean @default(false)
+}
+
+model ProductImage {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  thumbnail String
+  order     Int     @default(0)
+  isMain    Boolean @default(false)
+}
+
+// ==========================================
+// 💰 VENTAS (POS)
+// ==========================================
+
+model Sale {
+  id             String        @id @default(cuid())
+  invoiceNumber  String        @unique
+  customerId     String?
+  customer       Customer?     @relation(fields: [customerId], references: [id])
+  cashierId      String
+  cashier        User          @relation(fields: [cashierId], references: [id])
+  tableId        String?
+  table          Table?        @relation(fields: [tableId], references: [id])
+  type           SaleType
+  status         SaleStatus
+  items          SaleItem[]
+  subtotal       Decimal       @db.Decimal(10, 2)
+  discount       Decimal       @default(0) @db.Decimal(10, 2)
+  discountType   String?       // 'PERCENTAGE', 'FIXED'
+  tax            Decimal       @default(0) @db.Decimal(10, 2)
+  taxRate        Decimal       @default(10) @db.Decimal(5, 2)
+  deliveryCost   Decimal       @default(0) @db.Decimal(10, 2)
+  total          Decimal       @db.Decimal(10, 2)
+  paymentMethod  PaymentMethod
+  amountReceived Decimal?      @db.Decimal(10, 2)
+  change         Decimal?      @db.Decimal(10, 2)
+  notes          String?
+  isHeld         Boolean       @default(false)
+  heldAt         DateTime?
+  completedAt    DateTime?
+  cancelledAt    DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([cashierId])
+  @@index([customerId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([type])
+}
+
+model SaleItem {
+  id         String  @id @default(cuid())
+  saleId     String
+  sale       Sale    @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  productId  String
+  product    Product @relation(fields: [productId], references: [id])
+  priceTitle String  // 'Mediano'
+  quantity   Int
+  unitPrice  Decimal @db.Decimal(10, 2)
+  subtotal   Decimal @db.Decimal(10, 2)
+  notes      String?
+
+  @@index([saleId])
+  @@index([productId])
+}
+
+enum SaleType {
+  POS
+  ONLINE
+  DELIVERY
+  TAKEOUT
+}
+
+enum SaleStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  TRANSFER
+  ONLINE
+}
+
+// ==========================================
+// 👥 CLIENTES
+// ==========================================
+
+model Customer {
+  id             String   @id @default(cuid())
+  name           String
+  email          String?  @unique
+  phone          String
+  address        String?
+  neighborhood   String?
+  city           String?
+  zipCode        String?
+  birthDate      DateTime?
+  sales          Sale[]
+  onlineOrders   OnlineOrder[]
+  totalPurchases Decimal  @default(0) @db.Decimal(10, 2)
+  totalOrders    Int      @default(0)
+  notes          String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@index([phone])
+}
+
+// ==========================================
+// 🏪 MESAS
+// ==========================================
+
+model Table {
+  id            String      @id @default(cuid())
+  number        String      @unique
+  capacity      Int         @default(4)
+  status        TableStatus @default(AVAILABLE)
+  currentSaleId String?     @unique
+  sales         Sale[]
+  qrCode        String?     // Para pedidos desde mesa
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum TableStatus {
+  AVAILABLE
+  OCCUPIED
+  RESERVED
+  CLEANING
+}
+
+// ==========================================
+// 🛒 PEDIDOS ONLINE
+// ==========================================
+
+model OnlineOrder {
+  id                String        @id @default(cuid())
+  orderNumber       String        @unique
+  customerId        String?
+  customer          Customer?     @relation(fields: [customerId], references: [id])
+  customerName      String
+  customerEmail     String
+  customerPhone     String
+  deliveryAddress   String
+  deliveryNotes     String?
+  items             OrderItem[]
+  subtotal          Decimal       @db.Decimal(10, 2)
+  discount          Decimal       @default(0) @db.Decimal(10, 2)
+  deliveryCost      Decimal       @db.Decimal(10, 2)
+  tax               Decimal       @db.Decimal(10, 2)
+  total             Decimal       @db.Decimal(10, 2)
+  couponCode        String?
+  status            OrderStatus   @default(PENDING)
+  paymentStatus     PaymentStatus
+  paymentMethod     String
+  paymentIntentId   String?       // Stripe
+  estimatedDelivery DateTime?
+  deliveredAt       DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id          String      @id @default(cuid())
+  orderId     String
+  order       OnlineOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   String
+  product     Product     @relation(fields: [productId], references: [id])
+  priceTitle  String
+  quantity    Int
+  unitPrice   Decimal     @db.Decimal(10, 2)
+  subtotal    Decimal     @db.Decimal(10, 2)
+  notes       String?
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PREPARING
+  READY
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+// ==========================================
+// 🎟️ CUPONES
+// ==========================================
+
+model Coupon {
+  id          String     @id @default(cuid())
+  code        String     @unique
+  type        CouponType
+  value       Decimal    @db.Decimal(10, 2)
+  minPurchase Decimal?   @db.Decimal(10, 2)
+  maxDiscount Decimal?   @db.Decimal(10, 2)
+  usageLimit  Int?
+  usageCount  Int        @default(0)
+  validFrom   DateTime
+  validUntil  DateTime
+  isActive    Boolean    @default(true)
+
+  createdAt DateTime @default(now())
+}
+
+enum CouponType {
+  PERCENTAGE
+  FIXED
+  FREE_DELIVERY
+}
+
+// ==========================================
+// 📦 PROVEEDORES E INVENTARIO
+// ==========================================
+
+model Supplier {
+  id          String      @id @default(cuid())
+  name        String
+  email       String?
+  phone       String
+  address     String?
+  website     String?
+  contactName String?
+  taxId       String? // RFC/NIT
+  receivings  Receiving[]
+  notes       String?
+  isActive    Boolean     @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Receiving {
+  id           String          @id @default(cuid())
+  referenceNo  String          @unique
+  supplierId   String
+  supplier     Supplier        @relation(fields: [supplierId], references: [id])
+  items        ReceivingItem[]
+  subtotal     Decimal         @db.Decimal(10, 2)
+  tax          Decimal         @default(0) @db.Decimal(10, 2)
+  total        Decimal         @db.Decimal(10, 2)
+  notes        String?
+  receivedById String
+  receivedBy   User            @relation(fields: [receivedById], references: [id])
+  receivedAt   DateTime        @default(now())
+
+  createdAt DateTime @default(now())
+}
+
+model ReceivingItem {
+  id          String    @id @default(cuid())
+  receivingId String
+  receiving   Receiving @relation(fields: [receivingId], references: [id], onDelete: Cascade)
+  productId   String
+  product     Product   @relation(fields: [productId], references: [id])
+  quantity    Int
+  cost        Decimal   @db.Decimal(10, 2)
+  subtotal    Decimal   @db.Decimal(10, 2)
+}
+
+model Adjustment {
+  id           String           @id @default(cuid())
+  referenceNo  String           @unique
+  type         AdjustmentType
+  reason       String
+  items        AdjustmentItem[]
+  adjustedById String
+  adjustedBy   User             @relation(fields: [adjustedById], references: [id])
+  notes        String?
+
+  createdAt DateTime @default(now())
+}
+
+model AdjustmentItem {
+  id           String     @id @default(cuid())
+  adjustmentId String
+  adjustment   Adjustment @relation(fields: [adjustmentId], references: [id], onDelete: Cascade)
+  productId    String
+  product      Product    @relation(fields: [productId], references: [id])
+  quantity     Int
+  type         String     // 'ADD', 'SUBTRACT'
+  reason       String?
+}
+
+enum AdjustmentType {
+  DAMAGE
+  LOSS
+  FOUND
+  RETURN
+  CORRECTION
+}
+
+model InventoryLog {
+  id             String   @id @default(cuid())
+  productId      String
+  product        Product  @relation(fields: [productId], references: [id])
+  type           String   // SALE, RECEIVING, ADJUSTMENT
+  referenceId    String
+  quantityBefore Int
+  quantity       Int      // + o -
+  quantityAfter  Int
+  userId         String
+  notes          String?
+
+  createdAt DateTime @default(now())
+
+  @@index([productId, createdAt])
+}
+
+// ==========================================
+// 💸 GASTOS
+// ==========================================
+
+model Expense {
+  id          String          @id @default(cuid())
+  description String
+  amount      Decimal         @db.Decimal(10, 2)
+  category    ExpenseCategory
+  date        DateTime
+  receipt     String?         // URL de imagen
+  createdById String
+  createdBy   User            @relation(fields: [createdById], references: [id])
+  notes       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum ExpenseCategory {
+  RENT
+  UTILITIES
+  SUPPLIES
+  PAYROLL
+  MAINTENANCE
+  MARKETING
+  OTHER
+}
+
+// ==========================================
+// 📝 ACTIVIDADES Y NOTIFICACIONES
+// ==========================================
+
+model Activity {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  action      String   // 'CREATE', 'UPDATE', 'DELETE', 'LOGIN'
+  resource    String   // 'Product', 'Sale', 'User'
+  resourceId  String?
+  description String
+  ipAddress   String?
+  userAgent   String?
+  metadata    Json?    // Datos adicionales
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id])
+  type      NotificationType
+  title     String
+  message   String
+  link      String?
+  isRead    Boolean          @default(false)
+  readAt    DateTime?
+
+  createdAt DateTime @default(now())
+}
+
+enum NotificationType {
+  INFO
+  SUCCESS
+  WARNING
+  ERROR
+}
+
+// ==========================================
+// ⚙️ CONFIGURACIÓN
+// ==========================================
+
+model Setting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value Json
+
+  updatedAt DateTime @updatedAt
+}
