@@ -1,4 +1,5 @@
 # Especificación de Requisitos de Software (SRS)
+
 ## Sistema POS para Restaurante
 
 ---
@@ -6,10 +7,13 @@
 ## 1. INTRODUCCIÓN
 
 ### 1.1 Propósito
+
 Este documento describe los requisitos funcionales y no funcionales del Sistema de Punto de Venta (POS) para Restaurante. El sistema está diseñado para gestionar operaciones de ventas, inventario, clientes, pedidos online y administración de un restaurante.
 
 ### 1.2 Alcance
+
 El sistema **POS para Restaurante** es una aplicación web desarrollada en Laravel 5.5 que permite:
+
 - Gestión de ventas en punto de venta físico
 - Control de inventario y productos
 - Gestión de mesas y pedidos
@@ -19,6 +23,7 @@ El sistema **POS para Restaurante** es una aplicación web desarrollada en Larav
 - Sitio web público con menú digital
 
 ### 1.3 Definiciones, Acrónimos y Abreviaciones
+
 - **POS**: Point of Sale (Punto de Venta)
 - **SRS**: Software Requirements Specification
 - **CRUD**: Create, Read, Update, Delete
@@ -26,6 +31,7 @@ El sistema **POS para Restaurante** es una aplicación web desarrollada en Larav
 - **VAT**: Value Added Tax (Impuesto al Valor Agregado)
 
 ### 1.4 Referencias
+
 - Framework: Laravel 5.5
 - PHP: >= 7.0
 - Base de datos: MySQL
@@ -36,14 +42,18 @@ El sistema **POS para Restaurante** es una aplicación web desarrollada en Larav
 ## 2. DESCRIPCIÓN GENERAL
 
 ### 2.1 Perspectiva del Producto
+
 El sistema es una solución integral para restaurantes que combina:
+
 - Backend administrativo para gestión interna
 - Sistema POS para cajeros y meseros
 - Frontend público para clientes
 - API REST para integración con aplicaciones móviles
 
 ### 2.2 Funciones del Producto
+
 Las principales funciones son:
+
 1. **Gestión de Ventas (POS)**
    - Registro de ventas en tiempo real
    - Asignación de mesas
@@ -90,20 +100,22 @@ Las principales funciones son:
 
 ### 2.3 Características de los Usuarios
 
-| Tipo de Usuario | Descripción | Permisos |
-|-----------------|-------------|----------|
-| **Administrador** | Acceso total al sistema | Todas las funcionalidades |
-| **Cajero/Mesero** | Opera el POS y registra ventas | Crear ventas, ver productos, gestionar pedidos |
-| **Staff** | Personal operativo con acceso limitado | Según rol asignado |
-| **Cliente** | Usuario del sitio web público | Ver menú, realizar pedidos online |
+| Tipo de Usuario   | Descripción                            | Permisos                                       |
+| ----------------- | -------------------------------------- | ---------------------------------------------- |
+| **Administrador** | Acceso total al sistema                | Todas las funcionalidades                      |
+| **Cajero/Mesero** | Opera el POS y registra ventas         | Crear ventas, ver productos, gestionar pedidos |
+| **Staff**         | Personal operativo con acceso limitado | Según rol asignado                             |
+| **Cliente**       | Usuario del sitio web público          | Ver menú, realizar pedidos online              |
 
 ### 2.4 Restricciones
+
 - Requiere conexión a internet para pedidos online y pagos
 - Compatible con navegadores modernos (Chrome, Firefox, Safari, Edge)
 - Servidor con PHP >= 7.0 y MySQL
 - Laravel 5.5 (versión desactualizada, sin soporte oficial)
 
 ### 2.5 Suposiciones y Dependencias
+
 - Conexión estable a base de datos MySQL
 - Servidor XAMPP configurado correctamente
 - Credenciales de Stripe válidas para pagos online
@@ -116,6 +128,7 @@ Las principales funciones son:
 ### 3.1 Requisitos Funcionales
 
 #### RF-001: Autenticación y Autorización
+
 - **Prioridad**: Alta
 - **Descripción**: El sistema debe permitir login/logout con validación de credenciales
 - **Entradas**: Email, contraseña
@@ -124,6 +137,7 @@ Las principales funciones son:
 - **Requisitos relacionados**: RF-002
 
 #### RF-002: Gestión de Roles y Permisos
+
 - **Prioridad**: Alta
 - **Descripción**: Sistema de roles con permisos granulares usando Entrust
 - **Funcionalidades**:
@@ -132,6 +146,7 @@ Las principales funciones son:
   - Asignar roles a usuarios
 
 #### RF-003: Gestión de Productos
+
 - **Prioridad**: Alta
 - **Descripción**: CRUD completo de productos
 - **Atributos del producto**:
@@ -150,6 +165,7 @@ Las principales funciones son:
   - Paginación
 
 #### RF-004: Gestión de Categorías
+
 - **Prioridad**: Media
 - **Descripción**: Organización de productos por categorías
 - **Funcionalidades**:
@@ -158,6 +174,7 @@ Las principales funciones son:
   - Visualización jerárquica
 
 #### RF-005: Punto de Venta (POS)
+
 - **Prioridad**: Alta
 - **Descripción**: Interfaz para registro de ventas
 - **Funcionalidades**:
@@ -177,6 +194,7 @@ Las principales funciones son:
   - Cancelación de ventas
 
 #### RF-006: Gestión de Clientes
+
 - **Prioridad**: Media
 - **Descripción**: Administración de base de datos de clientes
 - **Atributos**:
@@ -192,11 +210,13 @@ Las principales funciones son:
   - Creación rápida desde POS
 
 #### RF-007: Gestión de Proveedores
+
 - **Prioridad**: Media
 - **Descripción**: Administración de proveedores
 - **Funcionalidades**: CRUD completo similar a clientes
 
 #### RF-008: Gestión de Mesas
+
 - **Prioridad**: Media
 - **Descripción**: Control de mesas del restaurante
 - **Funcionalidades**:
@@ -205,6 +225,7 @@ Las principales funciones son:
   - Estado de mesas (ocupada/disponible)
 
 #### RF-009: Control de Inventario
+
 - **Prioridad**: Media
 - **Descripción**: Tracking de movimientos de inventario
 - **Funcionalidades**:
@@ -213,6 +234,7 @@ Las principales funciones son:
   - Historial de movimientos
 
 #### RF-010: Gestión de Gastos
+
 - **Prioridad**: Media
 - **Descripción**: Registro de gastos operativos
 - **Funcionalidades**:
@@ -221,6 +243,7 @@ Las principales funciones son:
   - Fecha y monto
 
 #### RF-011: Sistema de Reportes
+
 - **Prioridad**: Alta
 - **Descripción**: Generación de reportes analíticos
 - **Tipos de reportes**:
@@ -240,6 +263,7 @@ Las principales funciones son:
   - **Log de actividad**: Registro de acciones del personal
 
 #### RF-012: Pedidos Online
+
 - **Prioridad**: Alta
 - **Descripción**: Sistema de pedidos a través del sitio web
 - **Funcionalidades**:
@@ -254,6 +278,7 @@ Las principales funciones son:
   - Cambio de estado de pedidos
 
 #### RF-013: Sitio Web Público
+
 - **Prioridad**: Media
 - **Descripción**: Frontend para clientes
 - **Páginas**:
@@ -272,6 +297,7 @@ Las principales funciones son:
   - Multiidioma (inglés/español)
 
 #### RF-014: Gestión de Usuarios
+
 - **Prioridad**: Alta
 - **Descripción**: Administración de usuarios del sistema
 - **Funcionalidades**:
@@ -281,6 +307,7 @@ Las principales funciones son:
   - Perfil de usuario
 
 #### RF-015: Configuración del Sistema
+
 - **Prioridad**: Media
 - **Descripción**: Ajustes generales del sistema
 - **Funcionalidades**:
@@ -291,6 +318,7 @@ Las principales funciones son:
   - Cambio de contraseña
 
 #### RF-016: API REST
+
 - **Prioridad**: Media
 - **Descripción**: Endpoints para integración externa
 - **Endpoints disponibles**:
@@ -300,6 +328,7 @@ Las principales funciones son:
   - `/api/users` - Información de usuarios
 
 #### RF-017: Notificaciones por Email
+
 - **Prioridad**: Media
 - **Descripción**: Sistema de envío de emails
 - **Tipos de emails**:
@@ -311,11 +340,13 @@ Las principales funciones son:
 ### 3.2 Requisitos No Funcionales
 
 #### RNF-001: Rendimiento
+
 - El sistema debe responder en menos de 2 segundos para operaciones comunes
 - Soporte para al menos 50 transacciones concurrentes
 - Paginación en listados largos (15-25 registros por página)
 
 #### RNF-002: Seguridad
+
 - Autenticación requerida para áreas administrativas
 - Protección CSRF en formularios
 - Validación de datos en servidor
@@ -324,6 +355,7 @@ Las principales funciones son:
 - Middleware de autenticación y autorización
 
 #### RNF-003: Usabilidad
+
 - Interfaz responsive con Bootstrap
 - Búsqueda rápida en listados
 - Mensajes de éxito/error claros
@@ -331,6 +363,7 @@ Las principales funciones son:
 - Navegación intuitiva
 
 #### RNF-004: Mantenibilidad
+
 - Arquitectura MVC (Laravel)
 - Código modular y reutilizable
 - Migraciones de base de datos
@@ -339,23 +372,27 @@ Las principales funciones son:
 - Validaciones centralizadas en Request classes
 
 #### RNF-005: Disponibilidad
+
 - Disponibilidad del 99% en horario operativo
 - Backups automáticos de base de datos
 - Recuperación ante fallos
 
 #### RNF-006: Escalabilidad
+
 - Arquitectura preparada para crecimiento
 - Caché de archivos (Laravel)
 - Optimización de consultas SQL
 - Soft deletes para preservar datos históricos
 
 #### RNF-007: Compatibilidad
+
 - PHP >= 7.0
 - MySQL 5.7+
 - Navegadores: Chrome, Firefox, Safari, Edge (últimas 2 versiones)
 - Responsive design para tablets y móviles
 
 #### RNF-008: Integridad de Datos
+
 - Transacciones de base de datos para operaciones críticas
 - Validación de datos en backend
 - Relaciones de integridad referencial
@@ -368,63 +405,83 @@ Las principales funciones son:
 ### 4.1 Entidades Principales
 
 #### users
+
 - id, name, email, password, role_id, remember_token, timestamps
 
 #### roles
+
 - id, name, display_name, description, timestamps
 
 #### permissions
+
 - id, name, display_name, description, timestamps
 
 #### categories
+
 - id, name, timestamps
 
 #### products
+
 - id, name, barcode, prices (JSON), titles (JSON), category_id, description, is_delete, deleted_at, timestamps
 
 #### customers
+
 - id, name, email, phone, address, neighborhood, comments, timestamps
 
 #### suppliers
+
 - id, name, email, phone, address, comments, timestamps
 
 #### sales
+
 - id, customer_id, cashier_id, name, email, phone, address, type (pos/order), status, amount, discount, vat, total_given, change, payment_with, delivery_cost, comments, timestamps
 
 #### sale_items
+
 - id, sale_id, product_id, quantity, price, timestamps
 
 #### tables
+
 - id, name, status, timestamps
 
 #### expenses
+
 - id, name, amount, category, date, description, timestamps
 
 #### receivings
+
 - id, supplier_id, reference_no, total, note, timestamps
 
 #### receiving_items
+
 - id, receiving_id, product_id, quantity, cost, timestamps
 
 #### adjustments
+
 - id, reference_no, note, timestamps
 
 #### adjustment_items
+
 - id, adjustment_id, product_id, quantity, type (addition/subtraction), timestamps
 
 #### inventory_tracking
+
 - id, product_id, sale_id, receiving_id, adjustment_id, quantity, type, timestamps
 
 #### pages
+
 - id, title, slug, content, meta_description, meta_keywords, timestamps
 
 #### sliders
+
 - id, title, image, link, order, status, timestamps
 
 #### activities
+
 - id, user_id, action, description, timestamps
 
 ### 4.2 Relaciones
+
 - **User** belongsTo **Role**
 - **Role** belongsToMany **Permission**
 - **Product** belongsTo **Category**
@@ -440,22 +497,26 @@ Las principales funciones son:
 ## 5. INTERFACES EXTERNAS
 
 ### 5.1 Interfaces de Usuario
+
 - **Panel administrativo**: Interfaz completa con menú lateral, listados, formularios
 - **POS**: Interfaz optimizada para ventas rápidas
 - **Sitio web público**: Frontend responsive con menú, páginas institucionales
 
 ### 5.2 Interfaces de Hardware
+
 - Impresora térmica para tickets (recomendada)
 - Lector de código de barras (opcional)
 - Terminal de pago (opcional)
 
 ### 5.3 Interfaces de Software
+
 - **Base de datos**: MySQL vía PDO
 - **Pasarela de pago**: Stripe API
 - **Servidor SMTP**: Gmail/otro para envío de emails
 - **Procesamiento de imágenes**: Intervention/Image
 
 ### 5.4 Interfaces de Comunicación
+
 - HTTP/HTTPS para comunicación web
 - API REST JSON para integraciones
 - WebSockets (Pusher) configurado para tiempo real
@@ -465,6 +526,7 @@ Las principales funciones son:
 ## 6. OTROS REQUISITOS
 
 ### 6.1 Requisitos de Instalación
+
 1. Servidor web con PHP >= 7.0
 2. MySQL 5.7+
 3. Composer instalado
@@ -475,13 +537,15 @@ Las principales funciones son:
 8. Permisos de escritura en `storage/` y `bootstrap/cache/`
 
 ### 6.2 Requisitos de Configuración
+
 - **Stripe**: APP_STRIPE_KEY y APP_STRIPE_SECRET
 - **Email**: Configuración SMTP en `.env`
 - **Base de datos**: Credenciales en `.env`
 - **URL base**: APP_URL configurada correctamente
 
 ### 6.3 Dependencias del Sistema
-- **Laravel Framework**: 5.5.*
+
+- **Laravel Framework**: 5.5.\*
 - **barryvdh/laravel-dompdf**: Generación de PDFs
 - **intervention/image**: Procesamiento de imágenes
 - **stripe/stripe-php**: Integración con Stripe
@@ -493,6 +557,7 @@ Las principales funciones son:
 ## 7. APÉNDICES
 
 ### 7.1 Estructura de Directorios
+
 ```
 restaurante/
 ├── app/                    # Modelos, controladores, middleware
@@ -514,6 +579,7 @@ restaurante/
 ### 7.2 Rutas Principales del Sistema
 
 #### Rutas Públicas
+
 - `/` - Homepage
 - `/our-menu` - Menú del restaurante
 - `/about` - Acerca de
@@ -522,6 +588,7 @@ restaurante/
 - `/terms-condition` - Términos y condiciones
 
 #### Rutas Administrativas (requieren autenticación)
+
 - `/dashboard` - Panel principal
 - `/sales/create` - POS
 - `/sales` - Listado de ventas
@@ -538,17 +605,22 @@ restaurante/
 - `/roles` - Gestión de roles
 
 ### 7.3 Consideraciones de Migración
+
 El proyecto incluye documentos de planes de migración:
+
 - `MIGRATION_PLAN.md` - Plan general de migración
 - `MIGRATION_PLAN_NEXTJS.md` - Plan de migración a Next.js
 
 Se recomienda considerar actualización del stack tecnológico debido a:
+
 - Laravel 5.5 sin soporte oficial desde 2019
 - Vulnerabilidades de seguridad conocidas
 - Falta de características modernas
 
 ### 7.4 Notas Importantes
+
 ⚠️ **Advertencias de Seguridad**:
+
 - El sistema usa Laravel 5.5, versión obsoleta con vulnerabilidades conocidas
 - Se recomienda actualizar a Laravel 11.x (versión actual)
 - Base de datos configurada con usuario `root` sin contraseña (solo desarrollo)
@@ -558,9 +630,9 @@ Se recomienda considerar actualización del stack tecnológico debido a:
 
 ## 8. CONTROL DE VERSIONES
 
-| Versión | Fecha | Autor | Descripción |
-|---------|-------|-------|-------------|
-| 1.0 | 2025-09-30 | Análisis de código | Documento inicial generado a partir del código fuente |
+| Versión | Fecha      | Autor              | Descripción                                           |
+| ------- | ---------- | ------------------ | ----------------------------------------------------- |
+| 1.0     | 2025-09-30 | Análisis de código | Documento inicial generado a partir del código fuente |
 
 ---
 

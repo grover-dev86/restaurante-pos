@@ -1,4 +1,5 @@
 # Plan de Migración: Sistema POS Restaurante
+
 ## De Laravel a Next.js 14 Full-Stack
 
 ---
@@ -8,6 +9,7 @@
 ### Stack Tecnológico Completo
 
 **Core:**
+
 - ⚡ **Next.js 14** (App Router + Server Components)
 - 🔷 **TypeScript** (type-safety total)
 - 🗃️ **Prisma** (ORM + migraciones)
@@ -15,12 +17,14 @@
 - 🎨 **Tailwind CSS** + **shadcn/ui** (componentes)
 
 **Estado y Data:**
+
 - 🐻 **Zustand** (state management)
 - 🔄 **React Query / TanStack Query** (cache y fetching)
 - 📡 **tRPC** (type-safe API)
 - 🔌 **Socket.io** (real-time)
 
 **Utilidades:**
+
 - 📊 **Recharts** (gráficas)
 - 📄 **React-PDF** (tickets/facturas)
 - 🖼️ **UploadThing** (imágenes)
@@ -87,12 +91,14 @@ next-restaurant-pos/
 ### Estrategia: Migrar MySQL actual a Prisma
 
 **Paso 1: Introspección**
+
 ```bash
 # Prisma leerá tu base de datos actual y generará el schema
 npx prisma db pull
 ```
 
 **Paso 2: Schema Prisma** (ejemplo)
+
 ```prisma
 // prisma/schema.prisma
 datasource db {
@@ -245,6 +251,7 @@ model Table {
 ### **FASE 1: Setup y Fundamentos (Semana 1-2)**
 
 #### 1.1 Setup del Proyecto
+
 ```bash
 # Crear proyecto Next.js con TypeScript
 npx create-next-app@latest next-restaurant-pos --typescript --tailwind --app
@@ -270,6 +277,7 @@ npm install -D prisma-client-js
 ```
 
 **Tareas:**
+
 - [x] Crear proyecto Next.js
 - [ ] Configurar TypeScript estricto
 - [ ] Setup Tailwind + shadcn/ui
@@ -277,6 +285,7 @@ npm install -D prisma-client-js
 - [ ] Instalar todas las dependencias
 
 #### 1.2 Setup Prisma y Base de Datos
+
 ```bash
 # Inicializar Prisma
 npx prisma init
@@ -289,6 +298,7 @@ npx prisma generate
 ```
 
 **Tareas:**
+
 - [ ] Conectar Prisma a MySQL actual
 - [ ] Hacer introspección de tablas existentes
 - [ ] Ajustar schema.prisma para multi-tenant
@@ -296,12 +306,14 @@ npx prisma generate
 - [ ] Migrar datos existentes
 
 #### 1.3 Configurar NextAuth.js
+
 **Archivo:** `lib/auth.ts`
+
 ```typescript
-import NextAuth from "next-auth"
-import CredentialsProvider from "next-auth/providers/credentials"
-import { prisma } from "@/lib/db"
-import bcrypt from "bcryptjs"
+import NextAuth from 'next-auth'
+import CredentialsProvider from 'next-auth/providers/credentials'
+import { prisma } from '@/lib/db'
+import bcrypt from 'bcryptjs'
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
@@ -313,15 +325,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       async authorize(credentials) {
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
-          include: { restaurant: true }
+          include: { restaurant: true },
         })
 
         if (!user) return null
 
-        const isValid = await bcrypt.compare(
-          credentials.password,
-          user.password
-        )
+        const isValid = await bcrypt.compare(credentials.password, user.password)
 
         if (!isValid) return null
 
@@ -335,14 +344,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
-  session: { strategy: "jwt" },
+  session: { strategy: 'jwt' },
   pages: {
-    signIn: "/login",
+    signIn: '/login',
   },
 })
 ```
 
 **Tareas:**
+
 - [ ] Configurar NextAuth.js v5
 - [ ] Implementar login con credentials
 - [ ] Crear middleware de autenticación
@@ -354,7 +364,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ### **FASE 2: Core Features (Semana 3-6)**
 
 #### 2.1 Dashboard Principal
+
 **Componentes:**
+
 - [ ] Layout con sidebar responsive
 - [ ] Navbar con info de usuario
 - [ ] Cards de estadísticas
@@ -363,6 +375,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 - [ ] Alertas de stock bajo
 
 **Archivo:** `app/(dashboard)/page.tsx`
+
 ```typescript
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
@@ -396,7 +409,9 @@ export default async function DashboardPage() {
 ```
 
 #### 2.2 Gestión de Productos
+
 **Features:**
+
 - [ ] Tabla con búsqueda y filtros
 - [ ] Modal crear/editar producto
 - [ ] Upload de imágenes (UploadThing)
@@ -404,18 +419,19 @@ export default async function DashboardPage() {
 - [ ] Paginación server-side
 
 **API Route:** `app/api/products/route.ts`
+
 ```typescript
-import { NextResponse } from "next/server"
-import { auth } from "@/lib/auth"
-import { prisma } from "@/lib/db"
-import { productSchema } from "@/lib/validations/product"
+import { NextResponse } from 'next/server'
+import { auth } from '@/lib/auth'
+import { prisma } from '@/lib/db'
+import { productSchema } from '@/lib/validations/product'
 
 export async function GET(req: Request) {
   const session = await auth()
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { searchParams } = new URL(req.url)
-  const page = parseInt(searchParams.get("page") || "1")
+  const page = parseInt(searchParams.get('page') || '1')
   const limit = 10
 
   const products = await prisma.product.findMany({
@@ -423,7 +439,7 @@ export async function GET(req: Request) {
     include: { category: true },
     skip: (page - 1) * limit,
     take: limit,
-    orderBy: { createdAt: "desc" }
+    orderBy: { createdAt: 'desc' },
   })
 
   return NextResponse.json(products)
@@ -431,7 +447,7 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   const session = await auth()
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const body = await req.json()
   const validated = productSchema.parse(body)
@@ -440,7 +456,7 @@ export async function POST(req: Request) {
     data: {
       ...validated,
       restaurantId: session.user.restaurantId,
-    }
+    },
   })
 
   return NextResponse.json(product)
@@ -448,7 +464,9 @@ export async function POST(req: Request) {
 ```
 
 #### 2.3 Sistema POS (Punto de Venta)
+
 **Features:**
+
 - [ ] Interfaz de productos con grid
 - [ ] Carrito de compra reactivo
 - [ ] Cálculo automático de totales
@@ -458,6 +476,7 @@ export async function POST(req: Request) {
 - [ ] Impresión térmica
 
 **Componente:** `app/(dashboard)/pos/page.tsx`
+
 ```typescript
 "use client"
 
@@ -515,8 +534,9 @@ export default function POSPage() {
 ```
 
 **Store Zustand:** `store/cart.ts`
+
 ```typescript
-import { create } from "zustand"
+import { create } from 'zustand'
 
 interface CartItem {
   id: number
@@ -539,35 +559,35 @@ export const useCart = create<CartStore>((set, get) => ({
 
   addItem: (product) => {
     const items = get().items
-    const existing = items.find(i => i.id === product.id)
+    const existing = items.find((i) => i.id === product.id)
 
     if (existing) {
-      const updated = items.map(i =>
-        i.id === product.id
-          ? { ...i, quantity: i.quantity + 1 }
-          : i
+      const updated = items.map((i) =>
+        i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i
       )
-      const total = updated.reduce((sum, i) => sum + (i.price * i.quantity), 0)
+      const total = updated.reduce((sum, i) => sum + i.price * i.quantity, 0)
       set({ items: updated, total })
     } else {
       const newItems = [...items, { ...product, quantity: 1 }]
-      const total = newItems.reduce((sum, i) => sum + (i.price * i.quantity), 0)
+      const total = newItems.reduce((sum, i) => sum + i.price * i.quantity, 0)
       set({ items: newItems, total })
     }
   },
 
   removeItem: (id) => {
-    const items = get().items.filter(i => i.id !== id)
-    const total = items.reduce((sum, i) => sum + (i.price * i.quantity), 0)
+    const items = get().items.filter((i) => i.id !== id)
+    const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0)
     set({ items, total })
   },
 
-  clear: () => set({ items: [], total: 0 })
+  clear: () => set({ items: [], total: 0 }),
 }))
 ```
 
 #### 2.4 Gestión de Categorías
+
 **Features:**
+
 - [ ] CRUD completo
 - [ ] Drag & drop para ordenar
 - [ ] Upload de imágenes
@@ -578,31 +598,34 @@ export const useCart = create<CartStore>((set, get) => ({
 ### **FASE 3: Features Avanzadas (Semana 7-10)**
 
 #### 3.1 Multi-Tenant (Multi-restaurante)
+
 **Middleware:** `middleware.ts`
+
 ```typescript
-import { auth } from "@/lib/auth"
-import { NextResponse } from "next/server"
+import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
 
 export async function middleware(request) {
   const session = await auth()
 
   if (!session) {
-    return NextResponse.redirect(new URL("/login", request.url))
+    return NextResponse.redirect(new URL('/login', request.url))
   }
 
   // Inyectar restaurantId en headers
   const headers = new Headers(request.headers)
-  headers.set("x-restaurant-id", session.user.restaurantId.toString())
+  headers.set('x-restaurant-id', session.user.restaurantId.toString())
 
   return NextResponse.next({ headers })
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/api/:path*"]
+  matcher: ['/dashboard/:path*', '/api/:path*'],
 }
 ```
 
 **Features:**
+
 - [ ] Panel de super admin
 - [ ] Crear nuevos restaurantes
 - [ ] Subdominios por restaurante (opcional)
@@ -610,7 +633,9 @@ export const config = {
 - [ ] Facturación por restaurante
 
 #### 3.2 Pedidos Online y Delivery
+
 **Features:**
+
 - [ ] Menú público con carrito
 - [ ] Checkout con Stripe/PayPal
 - [ ] Tracking de pedido en tiempo real
@@ -618,7 +643,9 @@ export const config = {
 - [ ] Integración con WhatsApp
 
 #### 3.3 Sistema de Mesas y QR
+
 **Features:**
+
 - [ ] Generador de QR codes
 - [ ] Página de pedido por QR
 - [ ] Mapa visual de mesas
@@ -626,7 +653,9 @@ export const config = {
 - [ ] Asignación automática
 
 #### 3.4 Inventario Avanzado
+
 **Features:**
+
 - [ ] Control de stock en tiempo real
 - [ ] Alertas automáticas
 - [ ] Historial de movimientos
@@ -638,7 +667,9 @@ export const config = {
 ### **FASE 4: Features Premium (Semana 11-14)**
 
 #### 4.1 Reportes Avanzados
+
 **Features:**
+
 - [ ] Dashboard de analytics
 - [ ] Reportes personalizables
 - [ ] Exportar a PDF/Excel
@@ -646,20 +677,22 @@ export const config = {
 - [ ] Predicciones con ML (opcional)
 
 #### 4.2 Real-Time con Socket.io
+
 **Setup:** `lib/socket.ts`
+
 ```typescript
-import { Server } from "socket.io"
+import { Server } from 'socket.io'
 
 export function initSocket(httpServer) {
   const io = new Server(httpServer)
 
-  io.on("connection", (socket) => {
-    socket.on("join-restaurant", (restaurantId) => {
+  io.on('connection', (socket) => {
+    socket.on('join-restaurant', (restaurantId) => {
       socket.join(`restaurant-${restaurantId}`)
     })
 
-    socket.on("new-order", (data) => {
-      io.to(`restaurant-${data.restaurantId}`).emit("order-received", data)
+    socket.on('new-order', (data) => {
+      io.to(`restaurant-${data.restaurantId}`).emit('order-received', data)
     })
   })
 
@@ -668,13 +701,16 @@ export function initSocket(httpServer) {
 ```
 
 **Features:**
+
 - [ ] Notificaciones en tiempo real
 - [ ] Actualización de pedidos
 - [ ] Chat interno staff
 - [ ] Dashboard live
 
 #### 4.3 App Móvil (Opcional)
+
 **Tech:** React Native + Expo
+
 - [ ] App para meseros
 - [ ] App para clientes
 - [ ] Compartir código con web
@@ -684,6 +720,7 @@ export function initSocket(httpServer) {
 ## 🎨 Diseño UI/UX
 
 ### Tema y Colores
+
 ```typescript
 // tailwind.config.ts
 export default {
@@ -696,13 +733,14 @@ export default {
           900: '#7c2d12',
         },
         // ... más colores
-      }
-    }
-  }
+      },
+    },
+  },
 }
 ```
 
 ### Componentes clave con shadcn/ui
+
 - [ ] Button
 - [ ] Card
 - [ ] Table
@@ -718,13 +756,13 @@ export default {
 
 ## 📈 Cronograma
 
-| Fase | Duración | Entregable |
-|------|----------|------------|
-| Fase 1: Setup | 2 semanas | Proyecto base + Auth |
-| Fase 2: Core | 4 semanas | POS + CRUD completo |
-| Fase 3: Avanzado | 4 semanas | Multi-tenant + Online orders |
-| Fase 4: Premium | 4 semanas | Real-time + Analytics |
-| **TOTAL** | **14 semanas** | **SaaS completo** |
+| Fase             | Duración       | Entregable                   |
+| ---------------- | -------------- | ---------------------------- |
+| Fase 1: Setup    | 2 semanas      | Proyecto base + Auth         |
+| Fase 2: Core     | 4 semanas      | POS + CRUD completo          |
+| Fase 3: Avanzado | 4 semanas      | Multi-tenant + Online orders |
+| Fase 4: Premium  | 4 semanas      | Real-time + Analytics        |
+| **TOTAL**        | **14 semanas** | **SaaS completo**            |
 
 ---
 
@@ -776,6 +814,7 @@ vercel --prod
 ¿Quieres que empiece a crear el proyecto Next.js ahora mismo?
 
 Puedo:
+
 1. **Crear el proyecto base** con toda la configuración
 2. **Migrar el schema de Prisma** desde tu MySQL actual
 3. **Implementar autenticación** completa

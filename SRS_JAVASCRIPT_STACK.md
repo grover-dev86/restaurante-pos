@@ -1,5 +1,7 @@
 # Especificación de Requisitos de Software (SRS)
+
 ## Sistema POS para Restaurante
+
 ### Stack Tecnológico JavaScript
 
 ---
@@ -7,10 +9,13 @@
 ## 1. INTRODUCCIÓN
 
 ### 1.1 Propósito
+
 Este documento describe los requisitos funcionales y no funcionales del Sistema de Punto de Venta (POS) para Restaurante utilizando un **stack tecnológico completamente basado en JavaScript/TypeScript**. El sistema está diseñado para gestionar operaciones de ventas, inventario, clientes, pedidos online y administración de un restaurante.
 
 ### 1.2 Alcance
+
 El sistema **POS para Restaurante** es una aplicación web moderna desarrollada con tecnologías JavaScript que permite:
+
 - Gestión de ventas en punto de venta físico
 - Control de inventario y productos en tiempo real
 - Gestión de mesas y pedidos
@@ -21,6 +26,7 @@ El sistema **POS para Restaurante** es una aplicación web moderna desarrollada 
 - Aplicación web progresiva (PWA) para uso offline
 
 ### 1.3 Definiciones, Acrónimos y Abreviaciones
+
 - **POS**: Point of Sale (Punto de Venta)
 - **SRS**: Software Requirements Specification
 - **CRUD**: Create, Read, Update, Delete
@@ -37,6 +43,7 @@ El sistema **POS para Restaurante** es una aplicación web moderna desarrollada 
 ### 1.4 Stack Tecnológico Propuesto
 
 #### Frontend
+
 - **Framework**: Next.js 14+ (React 18+)
 - **Lenguaje**: TypeScript 5+
 - **UI/Components**:
@@ -53,6 +60,7 @@ El sistema **POS para Restaurante** es una aplicación web moderna desarrollada 
 - **Gestión de fechas**: date-fns
 
 #### Backend
+
 - **Runtime**: Node.js 20+ LTS
 - **Framework**:
   - **Opción 1**: Next.js 14+ API Routes (Full-stack)
@@ -66,6 +74,7 @@ El sistema **POS para Restaurante** es una aplicación web moderna desarrollada 
 - **Cron Jobs**: node-cron
 
 #### Servicios Adicionales
+
 - **Pagos**: Stripe SDK para Node.js
 - **Email**: Resend o Nodemailer
 - **Almacenamiento**:
@@ -77,6 +86,7 @@ El sistema **POS para Restaurante** es una aplicación web moderna desarrollada 
 - **Procesamiento de imágenes**: Sharp
 
 #### DevOps & Deployment
+
 - **Hosting**: Vercel, Netlify, o Railway
 - **Base de datos**: Supabase, Neon, o PlanetScale
 - **CI/CD**: GitHub Actions
@@ -88,7 +98,9 @@ El sistema **POS para Restaurante** es una aplicación web moderna desarrollada 
 ## 2. DESCRIPCIÓN GENERAL
 
 ### 2.1 Perspectiva del Producto
+
 El sistema es una **aplicación web moderna full-stack** que combina:
+
 - Frontend responsivo con SSR/SSG para SEO optimizado
 - Backend API REST con TypeScript
 - Sistema POS optimizado para uso intensivo
@@ -148,6 +160,7 @@ El sistema es una **aplicación web moderna full-stack** que combina:
 ### 2.3 Funciones del Producto
 
 #### 1. Gestión de Ventas (POS)
+
 - Interfaz optimizada para velocidad y usabilidad
 - Registro de ventas en tiempo real con WebSocket
 - Asignación de mesas con actualización automática
@@ -160,6 +173,7 @@ El sistema es una **aplicación web moderna full-stack** que combina:
 - Impresión térmica de tickets
 
 #### 2. Gestión de Inventario
+
 - Control de productos con imágenes optimizadas
 - Categorías jerárquicas
 - Tracking de inventario en tiempo real
@@ -170,6 +184,7 @@ El sistema es una **aplicación web moderna full-stack** que combina:
 - Exportación de datos a CSV/Excel
 
 #### 3. Gestión Comercial
+
 - Administración de clientes con historial de compras
 - Administración de proveedores
 - Registro de gastos por categoría
@@ -177,6 +192,7 @@ El sistema es una **aplicación web moderna full-stack** que combina:
 - Proyecciones y tendencias
 
 #### 4. Reportes y Análisis
+
 - Dashboard con métricas clave en tiempo real
 - Ventas por período (día, semana, mes, año)
 - Productos más vendidos (top 10, 20, 50)
@@ -188,6 +204,7 @@ El sistema es una **aplicación web moderna full-stack** que combina:
 - Reportes personalizables
 
 #### 5. Pedidos Online
+
 - Catálogo de productos con imágenes optimizadas
 - Carrito de compras persistente
 - Checkout optimizado
@@ -198,6 +215,7 @@ El sistema es una **aplicación web moderna full-stack** que combina:
 - Sistema de cupones y descuentos
 
 #### 6. Sitio Web Público
+
 - Landing page optimizada (SEO)
 - Menú digital con filtros y búsqueda
 - Páginas institucionales (SSG)
@@ -209,6 +227,7 @@ El sistema es una **aplicación web moderna full-stack** que combina:
 - Accesibilidad WCAG 2.1 AA
 
 #### 7. Administración de Sistema
+
 - Gestión de usuarios con avatar
 - Sistema de roles y permisos granular (RBAC)
 - Configuración general del sistema
@@ -221,16 +240,17 @@ El sistema es una **aplicación web moderna full-stack** que combina:
 
 ### 2.4 Características de los Usuarios
 
-| Tipo de Usuario | Descripción | Permisos | Acceso |
-|-----------------|-------------|----------|--------|
-| **Super Admin** | Acceso total al sistema | Todas las funcionalidades + configuración avanzada | Dashboard completo |
-| **Administrador** | Gestión operativa | CRUD completo, reportes, configuración básica | Dashboard + reportes |
-| **Cajero** | Opera el POS | Crear ventas, ver productos, gestionar pedidos | Solo POS |
-| **Mesero** | Toma pedidos | Crear órdenes, asignar mesas, ver menú | POS + mesas |
-| **Contador** | Análisis financiero | Solo lectura, reportes, exportación | Reportes + dashboard |
-| **Cliente** | Usuario web | Ver menú, realizar pedidos, perfil | Sitio público + cuenta |
+| Tipo de Usuario   | Descripción             | Permisos                                           | Acceso                 |
+| ----------------- | ----------------------- | -------------------------------------------------- | ---------------------- |
+| **Super Admin**   | Acceso total al sistema | Todas las funcionalidades + configuración avanzada | Dashboard completo     |
+| **Administrador** | Gestión operativa       | CRUD completo, reportes, configuración básica      | Dashboard + reportes   |
+| **Cajero**        | Opera el POS            | Crear ventas, ver productos, gestionar pedidos     | Solo POS               |
+| **Mesero**        | Toma pedidos            | Crear órdenes, asignar mesas, ver menú             | POS + mesas            |
+| **Contador**      | Análisis financiero     | Solo lectura, reportes, exportación                | Reportes + dashboard   |
+| **Cliente**       | Usuario web             | Ver menú, realizar pedidos, perfil                 | Sitio público + cuenta |
 
 ### 2.5 Restricciones
+
 - Requiere navegadores modernos con soporte ES2022+
 - JavaScript habilitado en el navegador
 - Conexión a internet para funcionalidad completa
@@ -239,6 +259,7 @@ El sistema es una **aplicación web moderna full-stack** que combina:
 - Límite de subida de imágenes: 5MB por archivo
 
 ### 2.6 Suposiciones y Dependencias
+
 - Node.js 20+ instalado en servidor
 - Base de datos PostgreSQL disponible
 - Cuenta de Stripe para pagos
@@ -253,11 +274,13 @@ El sistema es una **aplicación web moderna full-stack** que combina:
 ### 3.1 Requisitos Funcionales
 
 #### RF-001: Autenticación y Autorización
+
 **Prioridad**: Alta
 
 **Descripción**: Sistema de autenticación seguro con JWT y manejo de sesiones
 
 **Funcionalidades**:
+
 - Login con email/contraseña
 - Autenticación de dos factores (2FA) opcional
 - OAuth social login (Google, Facebook) opcional
@@ -269,20 +292,24 @@ El sistema es una **aplicación web moderna full-stack** que combina:
 - Rate limiting en endpoints de auth
 
 **Validaciones**:
+
 - Email válido y único
 - Contraseña mínimo 8 caracteres con mayúsculas, minúsculas y números
 - Captcha en intentos de login fallidos (3+)
 
 **Salidas**:
+
 - JWT token con información del usuario
 - Redirección según rol
 
 #### RF-002: Gestión de Roles y Permisos (RBAC)
+
 **Prioridad**: Alta
 
 **Descripción**: Sistema de control de acceso basado en roles
 
 **Entidades**:
+
 ```typescript
 interface Role {
   id: string
@@ -304,6 +331,7 @@ interface Permission {
 ```
 
 **Funcionalidades**:
+
 - CRUD de roles
 - Asignación de permisos a roles
 - Asignación de roles a usuarios
@@ -311,11 +339,13 @@ interface Permission {
 - Permisos por recurso y acción
 
 #### RF-003: Gestión de Productos
+
 **Prioridad**: Alta
 
 **Descripción**: Administración completa del catálogo de productos
 
 **Schema Prisma**:
+
 ```prisma
 model Product {
   id          String    @id @default(cuid())
@@ -362,6 +392,7 @@ model ProductImage {
 ```
 
 **Funcionalidades**:
+
 - CRUD completo con validación TypeScript
 - Búsqueda por nombre, código de barras, categoría
 - Filtros avanzados (activo, stock bajo, categoría)
@@ -377,6 +408,7 @@ model ProductImage {
 - Alertas de stock bajo
 
 **API Endpoints**:
+
 ```typescript
 GET    /api/products              // Listar con paginación
 GET    /api/products/:id          // Obtener uno
@@ -390,9 +422,11 @@ POST   /api/products/:id/archive  // Archivar
 ```
 
 #### RF-004: Gestión de Categorías
+
 **Prioridad**: Media
 
 **Schema**:
+
 ```prisma
 model Category {
   id          String    @id @default(cuid())
@@ -415,6 +449,7 @@ model Category {
 ```
 
 **Funcionalidades**:
+
 - Categorías jerárquicas (árbol)
 - Drag and drop para ordenar
 - Imagen representativa
@@ -422,11 +457,13 @@ model Category {
 - Activar/desactivar
 
 #### RF-005: Punto de Venta (POS)
+
 **Prioridad**: Alta
 
 **Descripción**: Interfaz optimizada para ventas rápidas
 
 **Interfaz**:
+
 - Layout dividido: Productos (izq) | Carrito (der)
 - Grid de categorías con iconos
 - Grid de productos con imágenes
@@ -443,6 +480,7 @@ model Category {
 - Atajos de teclado
 
 **Schema**:
+
 ```prisma
 model Sale {
   id              String      @id @default(cuid())
@@ -525,6 +563,7 @@ enum PaymentMethod {
 ```
 
 **Funcionalidades**:
+
 - Agregar productos al carrito
 - Modificar cantidades con +/-
 - Eliminar items
@@ -543,6 +582,7 @@ enum PaymentMethod {
 - Modo offline con queue de sincronización
 
 **WebSocket Events**:
+
 ```typescript
 // Cliente → Servidor
 socket.emit('sale:create', saleData)
@@ -556,9 +596,11 @@ socket.on('inventory:updated', (product) => {})
 ```
 
 #### RF-006: Gestión de Clientes
+
 **Prioridad**: Media
 
 **Schema**:
+
 ```prisma
 model Customer {
   id            String    @id @default(cuid())
@@ -585,6 +627,7 @@ model Customer {
 ```
 
 **Funcionalidades**:
+
 - CRUD completo
 - Búsqueda rápida por nombre/teléfono/email
 - Historial de compras
@@ -597,9 +640,11 @@ model Customer {
 - Segmentación (clientes VIP, frecuentes, etc.)
 
 #### RF-007: Gestión de Proveedores
+
 **Prioridad**: Media
 
 **Schema**:
+
 ```prisma
 model Supplier {
   id          String    @id @default(cuid())
@@ -623,9 +668,11 @@ model Supplier {
 ```
 
 #### RF-008: Gestión de Mesas
+
 **Prioridad**: Media
 
 **Schema**:
+
 ```prisma
 model Table {
   id          String      @id @default(cuid())
@@ -653,6 +700,7 @@ enum TableStatus {
 ```
 
 **Funcionalidades**:
+
 - Vista de plano de mesas (grid)
 - Estados visuales con colores
 - Asignar/liberar mesa
@@ -663,9 +711,11 @@ enum TableStatus {
 - Tiempo de ocupación
 
 #### RF-009: Control de Inventario
+
 **Prioridad**: Alta
 
 **Schema**:
+
 ```prisma
 model Receiving {
   id            String          @id @default(cuid())
@@ -761,6 +811,7 @@ model InventoryLog {
 ```
 
 **Funcionalidades**:
+
 - Recepciones de mercancía
 - Ajustes de inventario con justificación
 - Log completo de movimientos
@@ -771,9 +822,11 @@ model InventoryLog {
 - Auditoría de inventario
 
 #### RF-010: Gestión de Gastos
+
 **Prioridad**: Media
 
 **Schema**:
+
 ```prisma
 model Expense {
   id          String        @id @default(cuid())
@@ -806,6 +859,7 @@ enum ExpenseCategory {
 ```
 
 **Funcionalidades**:
+
 - CRUD de gastos
 - Categorización
 - Subir comprobantes/facturas
@@ -814,6 +868,7 @@ enum ExpenseCategory {
 - Exportación
 
 #### RF-011: Sistema de Reportes y Dashboard
+
 **Prioridad**: Alta
 
 **Descripción**: Dashboard interactivo con métricas en tiempo real
@@ -877,6 +932,7 @@ interface Report {
 ```
 
 **Funcionalidades**:
+
 - Actualización en tiempo real con WebSocket
 - Filtros por fecha personalizados
 - Comparación de períodos
@@ -887,6 +943,7 @@ interface Report {
 - Drill-down en datos
 
 **Tecnologías**:
+
 - Recharts para gráficos
 - TanStack Table para tablas
 - date-fns para manejo de fechas
@@ -894,11 +951,13 @@ interface Report {
 - ExcelJS para exportar Excel
 
 #### RF-012: Pedidos Online
+
 **Prioridad**: Alta
 
 **Descripción**: E-commerce integrado para pedidos online
 
 **Flow del Usuario**:
+
 1. Browse menú por categorías
 2. Ver detalle de producto
 3. Agregar al carrito
@@ -911,6 +970,7 @@ interface Report {
 10. Confirmación y tracking
 
 **Schema**:
+
 ```prisma
 model OnlineOrder {
   id              String       @id @default(cuid())
@@ -1009,6 +1069,7 @@ enum CouponType {
 ```
 
 **Funcionalidades**:
+
 - Catálogo público con SSG/ISR
 - Carrito persistente (localStorage + DB si auth)
 - Checkout de invitado o con cuenta
@@ -1025,6 +1086,7 @@ enum CouponType {
 - Tracking page para cliente
 
 **API Endpoints**:
+
 ```typescript
 GET    /api/online/products       // Catálogo público
 GET    /api/online/products/:id   // Detalle
@@ -1037,11 +1099,13 @@ GET    /api/online/orders/:id     // Tracking
 ```
 
 #### RF-013: Sitio Web Público
+
 **Prioridad**: Media
 
 **Descripción**: Frontend público optimizado para SEO y conversión
 
 **Páginas**:
+
 - **Home** (SSG):
   - Hero section con CTA
   - Productos destacados
@@ -1070,6 +1134,7 @@ GET    /api/online/orders/:id     // Tracking
 - **Blog** (SSG/ISR) - opcional
 
 **Funcionalidades**:
+
 - SEO optimizado (meta tags, Open Graph, JSON-LD)
 - Sitemap XML automático
 - robots.txt
@@ -1085,6 +1150,7 @@ GET    /api/online/orders/:id     // Tracking
 - Accesibilidad WCAG 2.1 AA
 
 **CMS para Administrador**:
+
 - Editor WYSIWYG para páginas
 - Gestión de sliders/banners
 - Gestión de menú de navegación
@@ -1092,9 +1158,11 @@ GET    /api/online/orders/:id     // Tracking
 - Media library
 
 #### RF-014: Gestión de Usuarios
+
 **Prioridad**: Alta
 
 **Schema**:
+
 ```prisma
 model User {
   id            String    @id @default(cuid())
@@ -1145,6 +1213,7 @@ model Activity {
 ```
 
 **Funcionalidades**:
+
 - CRUD de usuarios
 - Asignación de roles
 - Subir avatar con crop
@@ -1158,9 +1227,11 @@ model Activity {
 - Exportación de lista
 
 #### RF-015: Configuración del Sistema
+
 **Prioridad**: Media
 
 **Schema**:
+
 ```prisma
 model Setting {
   id    String @id @default(cuid())
@@ -1172,6 +1243,7 @@ model Setting {
 ```
 
 **Configuraciones**:
+
 ```typescript
 interface SystemSettings {
   // General
@@ -1231,6 +1303,7 @@ interface SystemSettings {
 ```
 
 **Funcionalidades**:
+
 - Interfaz de configuración por secciones
 - Validación de configuraciones críticas
 - Test de conexión SMTP
@@ -1239,11 +1312,13 @@ interface SystemSettings {
 - Historial de cambios
 
 #### RF-016: API REST
+
 **Prioridad**: Media
 
 **Descripción**: API RESTful completa con TypeScript
 
 **Arquitectura**:
+
 ```
 /api
   /auth
@@ -1347,6 +1422,7 @@ interface SystemSettings {
 ```
 
 **Características de la API**:
+
 - Autenticación JWT
 - Rate limiting por endpoint
 - Paginación estándar
@@ -1360,6 +1436,7 @@ interface SystemSettings {
 - Versionado (/api/v1)
 
 **Response Format**:
+
 ```typescript
 interface ApiResponse<T> {
   success: boolean
@@ -1379,6 +1456,7 @@ interface ApiResponse<T> {
 ```
 
 #### RF-017: Notificaciones
+
 **Prioridad**: Media
 
 **Tipos de Notificaciones**:
@@ -1403,6 +1481,7 @@ interface ApiResponse<T> {
    - Badge count
 
 **Schema**:
+
 ```prisma
 model Notification {
   id          String   @id @default(cuid())
@@ -1430,6 +1509,7 @@ enum NotificationType {
 ```
 
 **Funcionalidades**:
+
 - Centro de notificaciones
 - Marcar como leída
 - Marcar todas como leídas
@@ -1437,11 +1517,13 @@ enum NotificationType {
 - Subscripción push con service worker
 
 #### RF-018: PWA (Progressive Web App)
+
 **Prioridad**: Media
 
 **Descripción**: Funcionalidad offline y app-like experience
 
 **Características**:
+
 - Service Worker para cache
 - Manifiesto web
 - Instalable en dispositivos
@@ -1457,6 +1539,7 @@ enum NotificationType {
 - Actualización automática
 
 **Estrategia de Cache**:
+
 ```typescript
 // Network First: API calls
 // Cache First: Assets estáticos
@@ -1466,9 +1549,11 @@ enum NotificationType {
 ### 3.2 Requisitos No Funcionales
 
 #### RNF-001: Rendimiento
+
 **Prioridad**: Alta
 
 **Métricas**:
+
 - **TTFB** (Time to First Byte): < 600ms
 - **FCP** (First Contentful Paint): < 1.8s
 - **LCP** (Largest Contentful Paint): < 2.5s
@@ -1477,6 +1562,7 @@ enum NotificationType {
 - **FID** (First Input Delay): < 100ms
 
 **Optimizaciones**:
+
 - Server-Side Rendering (SSR) para páginas dinámicas
 - Static Site Generation (SSG) para contenido estático
 - Incremental Static Regeneration (ISR)
@@ -1492,15 +1578,18 @@ enum NotificationType {
 - HTTP/2 o HTTP/3
 
 **Capacidad**:
+
 - Soportar 100+ usuarios concurrent
 - 1000+ transacciones por día
 - Base de datos escalable (PostgreSQL)
 - Horizontal scaling con load balancer
 
 #### RNF-002: Seguridad
+
 **Prioridad**: Alta
 
 **Autenticación**:
+
 - JWT con refresh tokens
 - Tokens con expiración (15min access, 7d refresh)
 - Bcrypt para hash de passwords (salt rounds: 12)
@@ -1512,12 +1601,14 @@ enum NotificationType {
 - 2FA opcional (TOTP)
 
 **Autorización**:
+
 - RBAC (Role-Based Access Control)
 - Middleware de verificación en cada route
 - Validación de permisos por recurso y acción
 - Token verification en cada request
 
 **Protección**:
+
 - HTTPS obligatorio en producción
 - Helmet.js para headers de seguridad
 - CSRF protection
@@ -1531,15 +1622,18 @@ enum NotificationType {
 - Encriptación de datos sensibles en DB
 
 **Compliance**:
+
 - GDPR ready (consentimiento, derecho al olvido)
 - PCI DSS compatible (Stripe)
 - Política de privacidad
 - Términos de servicio
 
 #### RNF-003: Usabilidad
+
 **Prioridad**: Alta
 
 **UX**:
+
 - Diseño responsive (mobile-first)
 - Interfaz intuitiva y consistente
 - Navegación clara
@@ -1552,6 +1646,7 @@ enum NotificationType {
 - Onboarding para nuevos usuarios
 
 **Accesibilidad**:
+
 - WCAG 2.1 Level AA
 - Navegación por teclado
 - Screen reader friendly
@@ -1562,15 +1657,18 @@ enum NotificationType {
 - Textos alternativos en imágenes
 
 **Performance percibido**:
+
 - Skeleton loaders
 - Optimistic updates
 - Animaciones smooth (60fps)
 - Debounce en búsquedas
 
 #### RNF-004: Mantenibilidad
+
 **Prioridad**: Alta
 
 **Código**:
+
 - TypeScript strict mode
 - ESLint + Prettier
 - Arquitectura modular
@@ -1583,6 +1681,7 @@ enum NotificationType {
 - Git flow (feature branches)
 
 **Testing**:
+
 - Unit tests (Jest + Testing Library): >80% coverage
 - Integration tests (Playwright)
 - E2E tests (Cypress/Playwright)
@@ -1590,6 +1689,7 @@ enum NotificationType {
 - Visual regression tests (Percy/Chromatic)
 
 **Documentación**:
+
 - README completo
 - API documentation (Swagger)
 - Component documentation (Storybook)
@@ -1599,6 +1699,7 @@ enum NotificationType {
 - Troubleshooting guide
 
 **Monitoreo**:
+
 - Error tracking (Sentry)
 - Performance monitoring
 - Uptime monitoring
@@ -1607,11 +1708,13 @@ enum NotificationType {
 - Alertas automáticas
 
 #### RNF-005: Disponibilidad
+
 **Prioridad**: Alta
 
 **Uptime**: 99.5% (objetivo)
 
 **Estrategias**:
+
 - Health check endpoint
 - Auto-restart en crashes
 - Database connection pooling
@@ -1625,9 +1728,11 @@ enum NotificationType {
 - Redundancia de base de datos (replica)
 
 #### RNF-006: Escalabilidad
+
 **Prioridad**: Media
 
 **Horizontal Scaling**:
+
 - Stateless backend (JWT)
 - Shared session store (Redis)
 - CDN para assets
@@ -1635,6 +1740,7 @@ enum NotificationType {
 - Load balancer ready
 
 **Vertical Scaling**:
+
 - Database optimization
 - Query optimization
 - Indexing strategy
@@ -1642,14 +1748,17 @@ enum NotificationType {
 - Lazy loading de datos
 
 **Crecimiento**:
+
 - Diseño preparado para multi-tenant (futuro)
 - Microservicios ready (separación de concerns)
 - Message queue para tareas pesadas (opcional)
 
 #### RNF-007: Compatibilidad
+
 **Prioridad**: Media
 
 **Navegadores**:
+
 - Chrome 90+ ✅
 - Firefox 88+ ✅
 - Safari 14+ ✅
@@ -1657,11 +1766,13 @@ enum NotificationType {
 - No IE11 ❌
 
 **Dispositivos**:
+
 - Desktop (1920x1080, 1366x768)
 - Tablet (iPad, Android tablets)
 - Mobile (375x667+, responsive)
 
 **Plataformas**:
+
 - Windows 10+
 - macOS 11+
 - Linux (Ubuntu, Debian)
@@ -1669,6 +1780,7 @@ enum NotificationType {
 - Android 10+
 
 **Requisitos Mínimos del Servidor**:
+
 - Node.js 20+ LTS
 - PostgreSQL 15+
 - 2GB RAM (mínimo)
@@ -1677,9 +1789,11 @@ enum NotificationType {
 - CPU 2 cores (mínimo)
 
 #### RNF-008: Integridad de Datos
+
 **Prioridad**: Alta
 
 **Base de Datos**:
+
 - Transacciones ACID
 - Foreign keys con ON DELETE CASCADE/RESTRICT
 - Unique constraints
@@ -1689,6 +1803,7 @@ enum NotificationType {
 - Indexes para performance
 
 **Validación**:
+
 - Validación en frontend (UX)
 - Validación en backend (seguridad)
 - Schema validation con Zod
@@ -1696,6 +1811,7 @@ enum NotificationType {
 - Database-level constraints
 
 **Auditoría**:
+
 - Soft deletes donde aplique
 - Timestamps (createdAt, updatedAt)
 - Activity logs
@@ -1703,13 +1819,16 @@ enum NotificationType {
 - Backup antes de operaciones masivas
 
 #### RNF-009: Internacionalización (i18n)
+
 **Prioridad**: Baja
 
 **Idiomas soportados**:
+
 - Español (default)
 - Inglés
 
 **Implementación**:
+
 - next-i18next
 - Archivos JSON de traducciones
 - Detección automática de idioma
@@ -1719,9 +1838,11 @@ enum NotificationType {
 - RTL ready (futuro)
 
 #### RNF-010: Observabilidad
+
 **Prioridad**: Media
 
 **Logs**:
+
 - Structured logging (JSON)
 - Log levels (error, warn, info, debug)
 - Request/response logging
@@ -1730,6 +1851,7 @@ enum NotificationType {
 - Correlatio ID por request
 
 **Métricas**:
+
 - Response times
 - Error rates
 - Database query times
@@ -1738,6 +1860,7 @@ enum NotificationType {
 - Business metrics (ventas, productos, etc.)
 
 **Alertas**:
+
 - Error rate > threshold
 - Response time > threshold
 - Disk space < 10%
@@ -1882,6 +2005,7 @@ src/
 ### 5.2 Arquitectura de Backend (API)
 
 **Opción 1: Next.js API Routes** (Recomendado para full-stack)
+
 ```
 app/api/
 ├── auth/
@@ -1899,6 +2023,7 @@ app/api/
 ```
 
 **Opción 2: Backend Separado (NestJS)**
+
 ```
 src/
 ├── modules/
@@ -1923,6 +2048,7 @@ src/
 ### 5.3 Flujo de Datos
 
 **Autenticación**:
+
 ```
 Cliente → POST /api/auth/login → Validate → JWT → Response
       ← {accessToken, refreshToken, user}
@@ -1931,6 +2057,7 @@ Cliente → Request + Authorization Header → Middleware verify JWT → Route H
 ```
 
 **Operación CRUD**:
+
 ```
 Cliente → GET /api/products?page=1&search=pizza
        → Middleware: Auth + Permissions
@@ -1941,6 +2068,7 @@ Cliente → GET /api/products?page=1&search=pizza
 ```
 
 **Venta en POS**:
+
 ```
 1. Cliente agrega productos al carrito (estado local)
 2. POST /api/sales/hold (opcional)
@@ -1960,6 +2088,7 @@ Cliente → GET /api/products?page=1&search=pizza
 ### 5.4 Integración con Servicios Externos
 
 **Stripe**:
+
 ```typescript
 // Crear Payment Intent
 const paymentIntent = await stripe.paymentIntents.create({
@@ -1978,30 +2107,30 @@ POST /api/webhooks/stripe
 ```
 
 **Cloudinary** (Imágenes):
+
 ```typescript
 // Upload
 const result = await cloudinary.uploader.upload(file, {
   folder: 'products',
-  transformation: [
-    { width: 800, height: 800, crop: 'fill' },
-    { quality: 'auto' }
-  ]
+  transformation: [{ width: 800, height: 800, crop: 'fill' }, { quality: 'auto' }],
 })
 ```
 
 **Resend** (Email):
+
 ```typescript
 await resend.emails.send({
   from: 'no-reply@restaurante.com',
   to: customer.email,
   subject: 'Confirmación de Pedido',
-  react: OrderConfirmationEmail({ order })
+  react: OrderConfirmationEmail({ order }),
 })
 ```
 
 ### 5.5 WebSocket (Socket.io)
 
 **Server**:
+
 ```typescript
 // server/socket.ts
 io.on('connection', (socket) => {
@@ -2016,6 +2145,7 @@ io.on('connection', (socket) => {
 ```
 
 **Client**:
+
 ```typescript
 // hooks/useSocket.ts
 const socket = io()
@@ -2034,6 +2164,7 @@ socket.on('sale:created', (sale) => {
 ### 6.1 Interfaces de Usuario
 
 #### Dashboard Administrativo
+
 - Layout con sidebar
 - Header con notificaciones y perfil
 - Breadcrumbs
@@ -2042,6 +2173,7 @@ socket.on('sale:created', (sale) => {
 - Charts interactivos
 
 #### POS
+
 - Fullscreen layout
 - Split view (productos | carrito)
 - Touch-friendly buttons
@@ -2049,6 +2181,7 @@ socket.on('sale:created', (sale) => {
 - Quick actions
 
 #### Sitio Público
+
 - Responsive navbar
 - Hero section
 - Product grid
@@ -2057,25 +2190,30 @@ socket.on('sale:created', (sale) => {
 ### 6.2 Interfaces de Hardware
 
 **Impresora Térmica**:
+
 - Comunicación vía USB o red
 - Comandos ESC/POS
 - Librería: `node-thermal-printer`
 
 **Lector de Código de Barras**:
+
 - Input automático al campo activo
 - Detección por patrón (prefijo/sufijo)
 
 **Terminal de Pago**:
+
 - Integración vía Stripe Terminal SDK (opcional)
 
 ### 6.3 Interfaces de Software
 
 **Base de Datos**:
+
 - PostgreSQL vía Prisma ORM
 - Connection string en `.env`
 - Connection pooling
 
 **APIs Externas**:
+
 - Stripe API v2023-10-16
 - Cloudinary API
 - Resend API
@@ -2083,11 +2221,13 @@ socket.on('sale:created', (sale) => {
 ### 6.4 Interfaces de Comunicación
 
 **Protocolos**:
+
 - HTTP/HTTPS (REST API)
 - WebSocket (tiempo real)
 - Webhooks (callbacks)
 
 **Formatos**:
+
 - JSON para API
 - FormData para uploads
 - Server-Sent Events para streaming (opcional)
@@ -2099,12 +2239,14 @@ socket.on('sale:created', (sale) => {
 ### 7.1 Requisitos de Instalación
 
 **Prerrequisitos**:
+
 - Node.js 20+ LTS
 - npm, yarn o pnpm
 - PostgreSQL 15+
 - Git
 
 **Instalación Local**:
+
 ```bash
 # Clonar repositorio
 git clone https://github.com/tu-org/restaurante-pos.git
@@ -2131,6 +2273,7 @@ npm run dev
 ```
 
 **Variables de Entorno**:
+
 ```env
 # Database
 DATABASE_URL="postgresql://user:pass@localhost:5432/restaurante"
@@ -2161,6 +2304,7 @@ NEXT_PUBLIC_APP_URL="http://localhost:3000"
 ### 7.2 Deployment
 
 **Opción 1: Vercel** (Recomendado)
+
 ```bash
 # Install Vercel CLI
 npm i -g vercel
@@ -2172,6 +2316,7 @@ vercel
 ```
 
 **Opción 2: Railway**
+
 ```bash
 # Install Railway CLI
 npm i -g @railway/cli
@@ -2184,6 +2329,7 @@ railway up
 ```
 
 **Opción 3: VPS (Ubuntu)**
+
 ```bash
 # Instalar Node.js 20
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
@@ -2216,17 +2362,20 @@ sudo certbot --nginx -d tudominio.com
 ### 7.3 Monitoreo y Mantenimiento
 
 **Monitoreo**:
+
 - Sentry para error tracking
 - Vercel Analytics para performance
 - Google Analytics para uso
 - Uptime monitoring (UptimeRobot)
 
 **Backups**:
+
 - Database backup diario automático
 - Backup de archivos subidos
 - Retention policy: 30 días
 
 **Actualizaciones**:
+
 - Dependencias: revisar semanalmente
 - Security patches: aplicar inmediatamente
 - Features: ciclos de 2 semanas (sprints)
@@ -2234,6 +2383,7 @@ sudo certbot --nginx -d tudominio.com
 ### 7.4 Testing
 
 **Setup**:
+
 ```bash
 # Unit tests
 npm run test
@@ -2246,6 +2396,7 @@ npm run test:coverage
 ```
 
 **Estrategia**:
+
 - Unit tests para utils y servicios
 - Integration tests para API routes
 - E2E tests para flujos críticos:
@@ -2261,6 +2412,7 @@ npm run test:coverage
 ### 8.1 Fases del Proyecto
 
 **Fase 1: Setup e Infraestructura** (Semana 1-2)
+
 - [ ] Setup Next.js con TypeScript
 - [ ] Configurar Prisma con PostgreSQL
 - [ ] Setup Tailwind + shadcn/ui
@@ -2271,6 +2423,7 @@ npm run test:coverage
 - [ ] Seeds de datos
 
 **Fase 2: Autenticación y Usuarios** (Semana 3-4)
+
 - [ ] NextAuth.js setup
 - [ ] Login/Logout
 - [ ] Registro de usuarios
@@ -2280,6 +2433,7 @@ npm run test:coverage
 - [ ] Cambio de contraseña
 
 **Fase 3: Catálogo de Productos** (Semana 5-6)
+
 - [ ] CRUD de categorías
 - [ ] CRUD de productos
 - [ ] Upload de imágenes
@@ -2288,6 +2442,7 @@ npm run test:coverage
 - [ ] Gestión de stock
 
 **Fase 4: Punto de Venta (POS)** (Semana 7-9)
+
 - [ ] Interfaz de POS
 - [ ] Carrito de compras
 - [ ] Cálculos (subtotal, descuento, tax, total)
@@ -2298,18 +2453,21 @@ npm run test:coverage
 - [ ] Integración con impresora
 
 **Fase 5: Clientes y Mesas** (Semana 10)
+
 - [ ] CRUD de clientes
 - [ ] Búsqueda de clientes
 - [ ] Gestión de mesas
 - [ ] Asignación de mesa a venta
 
 **Fase 6: Inventario** (Semana 11-12)
+
 - [ ] Recepciones
 - [ ] Ajustes de inventario
 - [ ] Logs de inventario
 - [ ] Alertas de stock bajo
 
 **Fase 7: Reportes** (Semana 13-14)
+
 - [ ] Dashboard con KPIs
 - [ ] Gráficos de ventas
 - [ ] Reporte de productos más vendidos
@@ -2317,6 +2475,7 @@ npm run test:coverage
 - [ ] Exportación PDF/Excel
 
 **Fase 8: Pedidos Online** (Semana 15-17)
+
 - [ ] Sitio público con menú
 - [ ] Carrito de compras online
 - [ ] Checkout
@@ -2326,6 +2485,7 @@ npm run test:coverage
 - [ ] Emails de confirmación
 
 **Fase 9: Features Adicionales** (Semana 18-19)
+
 - [ ] Gestión de gastos
 - [ ] Sistema de cupones
 - [ ] Newsletter
@@ -2333,6 +2493,7 @@ npm run test:coverage
 - [ ] Multiidioma
 
 **Fase 10: PWA y Optimización** (Semana 20-21)
+
 - [ ] Service Worker
 - [ ] Modo offline
 - [ ] Push notifications
@@ -2340,12 +2501,14 @@ npm run test:coverage
 - [ ] Optimización SEO
 
 **Fase 11: Testing** (Semana 22-23)
+
 - [ ] Unit tests
 - [ ] Integration tests
 - [ ] E2E tests
 - [ ] Bug fixing
 
 **Fase 12: Deployment y Documentación** (Semana 24)
+
 - [ ] Deploy a producción
 - [ ] Configurar dominio y SSL
 - [ ] Documentación de usuario
@@ -2431,23 +2594,23 @@ npm run test:coverage
 
 ### 9.3 Comparación PHP vs JavaScript Stack
 
-| Aspecto | Laravel (PHP) | Next.js (JavaScript) |
-|---------|---------------|---------------------|
-| **Lenguaje** | PHP | TypeScript/JavaScript |
-| **Runtime** | Apache/Nginx + PHP-FPM | Node.js |
-| **Framework** | Laravel 5.5 | Next.js 14+ |
-| **ORM** | Eloquent | Prisma |
-| **Templates** | Blade | React JSX/TSX |
-| **Auth** | Laravel Auth | NextAuth.js |
-| **Validación** | FormRequest | Zod |
-| **Real-time** | Pusher/Laravel Echo | Socket.io |
-| **Type Safety** | No (PHP no es tipado fuertemente) | Sí (TypeScript) |
-| **Performance** | Bueno | Excelente (SSR/SSG) |
-| **SEO** | Regular | Excelente |
-| **Ecosistema** | Packagist | npm (más grande) |
-| **Learning Curve** | Media | Media-Alta |
-| **Developer Experience** | Bueno | Excelente |
-| **Modernidad** | Framework maduro | Stack moderno |
+| Aspecto                  | Laravel (PHP)                     | Next.js (JavaScript)  |
+| ------------------------ | --------------------------------- | --------------------- |
+| **Lenguaje**             | PHP                               | TypeScript/JavaScript |
+| **Runtime**              | Apache/Nginx + PHP-FPM            | Node.js               |
+| **Framework**            | Laravel 5.5                       | Next.js 14+           |
+| **ORM**                  | Eloquent                          | Prisma                |
+| **Templates**            | Blade                             | React JSX/TSX         |
+| **Auth**                 | Laravel Auth                      | NextAuth.js           |
+| **Validación**           | FormRequest                       | Zod                   |
+| **Real-time**            | Pusher/Laravel Echo               | Socket.io             |
+| **Type Safety**          | No (PHP no es tipado fuertemente) | Sí (TypeScript)       |
+| **Performance**          | Bueno                             | Excelente (SSR/SSG)   |
+| **SEO**                  | Regular                           | Excelente             |
+| **Ecosistema**           | Packagist                         | npm (más grande)      |
+| **Learning Curve**       | Media                             | Media-Alta            |
+| **Developer Experience** | Bueno                             | Excelente             |
+| **Modernidad**           | Framework maduro                  | Stack moderno         |
 
 ### 9.4 Ventajas del Stack JavaScript
 
@@ -2466,9 +2629,9 @@ npm run test:coverage
 
 ## 10. CONTROL DE VERSIONES
 
-| Versión | Fecha | Autor | Descripción |
-|---------|-------|-------|-------------|
-| 1.0 | 2025-09-30 | Equipo de Desarrollo | Documento inicial con stack JavaScript completo |
+| Versión | Fecha      | Autor                | Descripción                                     |
+| ------- | ---------- | -------------------- | ----------------------------------------------- |
+| 1.0     | 2025-09-30 | Equipo de Desarrollo | Documento inicial con stack JavaScript completo |
 
 ---
 
@@ -2486,6 +2649,7 @@ Este documento describe un sistema POS completo y moderno utilizando el stack te
 - Priorización de features
 
 Se recomienda iniciar con un MVP (Minimum Viable Product) que incluya:
+
 1. Autenticación
 2. Productos y categorías
 3. POS básico

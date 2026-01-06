@@ -1,4 +1,5 @@
 # Plan de Migración: Sistema POS Restaurante
+
 ## De Laravel 5.5 Monolítico a Laravel API + React SPA
 
 ---
@@ -6,6 +7,7 @@
 ## 📊 Análisis del Proyecto Actual
 
 ### Estado Actual
+
 - **Framework:** Laravel 5.5 (PHP 7.4)
 - **Base de datos:** MySQL con 35 tablas
 - **Arquitectura:** Monolítica (Blade templates)
@@ -25,6 +27,7 @@
 ## 🎯 Objetivo Final
 
 Crear un **SaaS Multi-tenant** moderno y escalable para gestión de restaurantes con:
+
 - Interfaz moderna y responsive
 - Experiencia de usuario fluida (SPA)
 - Múltiples restaurantes en una instalación
@@ -35,6 +38,7 @@ Crear un **SaaS Multi-tenant** moderno y escalable para gestión de restaurantes
 ## 🏗️ Arquitectura Propuesta
 
 ### Backend: Laravel 11 API
+
 ```
 laravel-restaurant-api/
 ├── app/
@@ -51,6 +55,7 @@ laravel-restaurant-api/
 ```
 
 ### Frontend: React + TypeScript
+
 ```
 restaurant-pos-frontend/
 ├── src/
@@ -65,7 +70,9 @@ restaurant-pos-frontend/
 ```
 
 ### Stack Tecnológico
+
 **Backend:**
+
 - Laravel 11
 - PHP 8.2+
 - MySQL 8.0
@@ -74,6 +81,7 @@ restaurant-pos-frontend/
 - Spatie Laravel Permission (roles)
 
 **Frontend:**
+
 - React 18
 - TypeScript
 - Vite
@@ -91,18 +99,21 @@ restaurant-pos-frontend/
 ### **FASE 1: Preparación y Setup (Semana 1-2)**
 
 #### 1.1 Actualizar Backend
+
 - [ ] Actualizar Laravel 5.5 → Laravel 11
 - [ ] Actualizar PHP 7.4 → PHP 8.2
 - [ ] Migrar dependencias obsoletas
 - [ ] Actualizar estructura de base de datos
 
 #### 1.2 Configurar API REST
+
 - [ ] Crear rutas API en `routes/api.php`
 - [ ] Implementar API Resources (transformadores)
 - [ ] Configurar Laravel Sanctum
 - [ ] Implementar middleware de autenticación
 
 #### 1.3 Setup Frontend
+
 - [ ] Crear proyecto React con Vite
 - [ ] Configurar TypeScript
 - [ ] Setup Redux Toolkit
@@ -114,12 +125,15 @@ restaurant-pos-frontend/
 ### **FASE 2: Migrar Core Features (Semana 3-6)**
 
 #### 2.1 Autenticación y Usuarios
+
 **Backend:**
+
 - [ ] API endpoints: login, register, logout, refresh
 - [ ] Gestión de tokens con Sanctum
 - [ ] Sistema de roles y permisos (API)
 
 **Frontend:**
+
 - [ ] Página de login
 - [ ] Registro de usuarios
 - [ ] Context/Redux para autenticación
@@ -127,25 +141,31 @@ restaurant-pos-frontend/
 - [ ] Manejo de tokens
 
 #### 2.2 Dashboard y Analytics
+
 **Backend:**
+
 - [ ] API para estadísticas (ventas, productos más vendidos)
 - [ ] Reportes por fechas
 - [ ] Gráficas de ingresos
 
 **Frontend:**
+
 - [ ] Dashboard con gráficas
 - [ ] Cards de estadísticas
 - [ ] Filtros por fecha
 - [ ] Gráficas interactivas (Chart.js)
 
 #### 2.3 Gestión de Productos
+
 **Backend:**
+
 - [ ] CRUD API para productos
 - [ ] Upload de imágenes
 - [ ] Búsqueda y filtros
 - [ ] Paginación
 
 **Frontend:**
+
 - [ ] Listado de productos con tabla
 - [ ] Formulario crear/editar producto
 - [ ] Upload de imágenes con preview
@@ -153,22 +173,28 @@ restaurant-pos-frontend/
 - [ ] Modal de confirmación de eliminación
 
 #### 2.4 Gestión de Categorías
+
 **Backend:**
+
 - [ ] CRUD API para categorías
 - [ ] Relaciones con productos
 
 **Frontend:**
+
 - [ ] Gestión de categorías
 - [ ] Drag & drop para ordenar
 
 #### 2.5 Sistema POS (Punto de Venta)
+
 **Backend:**
+
 - [ ] API para crear ventas
 - [ ] Cálculo de totales, impuestos
 - [ ] API de productos disponibles
 - [ ] Gestión de mesas
 
 **Frontend:**
+
 - [ ] Interfaz POS moderna
 - [ ] Selección de productos
 - [ ] Carrito de compra
@@ -181,50 +207,62 @@ restaurant-pos-frontend/
 ### **FASE 3: Funcionalidades Avanzadas (Semana 7-10)**
 
 #### 3.1 Multi-tenant (Multi-restaurante)
+
 **Backend:**
+
 - [ ] Migración de base de datos para multi-tenant
 - [ ] Middleware de tenant
 - [ ] Aislamiento de datos por restaurante
 - [ ] API para gestión de restaurantes
 
 **Frontend:**
+
 - [ ] Panel de super admin
 - [ ] Selector de restaurante
 - [ ] Onboarding para nuevos restaurantes
 
 #### 3.2 Inventario Avanzado
+
 **Backend:**
+
 - [ ] Control de stock en tiempo real
 - [ ] Alertas de stock bajo
 - [ ] Historial de movimientos
 - [ ] API de proveedores
 
 **Frontend:**
+
 - [ ] Dashboard de inventario
 - [ ] Alertas visuales
 - [ ] Gestión de proveedores
 - [ ] Reportes de inventario
 
 #### 3.3 Sistema de Pedidos Online
+
 **Backend:**
+
 - [ ] API pública para pedidos
 - [ ] Integración con pagos (Stripe/PayPal)
 - [ ] Notificaciones en tiempo real (Pusher)
 - [ ] Estados de pedido
 
 **Frontend:**
+
 - [ ] Menú público del restaurante
 - [ ] Carrito de compra
 - [ ] Checkout y pago
 - [ ] Tracking de pedido
 
 #### 3.4 Gestión de Mesas y Reservas
+
 **Backend:**
+
 - [ ] API para mesas
 - [ ] Sistema de reservas
 - [ ] QR codes por mesa
 
 **Frontend:**
+
 - [ ] Mapa visual de mesas
 - [ ] Sistema de reservas
 - [ ] Generador de QR codes
@@ -234,34 +272,42 @@ restaurant-pos-frontend/
 ### **FASE 4: Optimización y Features Premium (Semana 11-14)**
 
 #### 4.1 Reportes Avanzados
+
 **Backend:**
+
 - [ ] API de reportes personalizados
 - [ ] Exportación a PDF/Excel
 - [ ] Análisis de rentabilidad
 
 **Frontend:**
+
 - [ ] Dashboard de reportes
 - [ ] Generador de reportes custom
 - [ ] Exportación de datos
 - [ ] Gráficas comparativas
 
 #### 4.2 Notificaciones en Tiempo Real
+
 **Backend:**
+
 - [ ] Integración con Pusher/Laravel Echo
 - [ ] Eventos de pedidos
 - [ ] Alertas de cocina
 
 **Frontend:**
+
 - [ ] Notificaciones toast
 - [ ] Sonidos de alerta
 - [ ] Panel de notificaciones
 
 #### 4.3 App Móvil (Opcional)
+
 - [ ] Setup React Native
 - [ ] Versión móvil para meseros
 - [ ] Versión móvil para clientes
 
 #### 4.4 Integraciones
+
 - [ ] API de delivery (Uber Eats, Rappi)
 - [ ] Integración con impresoras térmicas
 - [ ] WhatsApp Business API
@@ -272,12 +318,14 @@ restaurant-pos-frontend/
 ## 💰 Características Premium para Vender
 
 ### Plan Básico ($29/mes)
+
 - ✅ Gestión de productos y categorías
 - ✅ Sistema POS básico
 - ✅ Hasta 3 usuarios
 - ✅ Reportes básicos
 
 ### Plan Profesional ($79/mes)
+
 - ✅ Todo lo del plan básico
 - ✅ Usuarios ilimitados
 - ✅ Multi-sucursales
@@ -287,6 +335,7 @@ restaurant-pos-frontend/
 - ✅ Soporte prioritario
 
 ### Plan Enterprise ($199/mes)
+
 - ✅ Todo lo del plan profesional
 - ✅ API personalizada
 - ✅ White label
@@ -299,6 +348,7 @@ restaurant-pos-frontend/
 ## 🛠️ Herramientas de Desarrollo
 
 ### Backend
+
 ```bash
 composer require laravel/sanctum
 composer require spatie/laravel-permission
@@ -307,6 +357,7 @@ composer require laravel/telescope --dev
 ```
 
 ### Frontend
+
 ```bash
 npm create vite@latest restaurant-pos-frontend -- --template react-ts
 npm install @reduxjs/toolkit react-redux
@@ -321,13 +372,13 @@ npm install react-hot-toast
 
 ## 📈 Cronograma Estimado
 
-| Fase | Duración | Entregable |
-|------|----------|------------|
-| Fase 1: Setup | 2 semanas | Backend API + Frontend base |
-| Fase 2: Core | 4 semanas | Sistema funcional completo |
-| Fase 3: Avanzado | 4 semanas | Multi-tenant + features avanzadas |
-| Fase 4: Premium | 4 semanas | Producto listo para vender |
-| **TOTAL** | **14 semanas (~3.5 meses)** | **SaaS completo** |
+| Fase             | Duración                    | Entregable                        |
+| ---------------- | --------------------------- | --------------------------------- |
+| Fase 1: Setup    | 2 semanas                   | Backend API + Frontend base       |
+| Fase 2: Core     | 4 semanas                   | Sistema funcional completo        |
+| Fase 3: Avanzado | 4 semanas                   | Multi-tenant + features avanzadas |
+| Fase 4: Premium  | 4 semanas                   | Producto listo para vender        |
+| **TOTAL**        | **14 semanas (~3.5 meses)** | **SaaS completo**                 |
 
 ---
 
