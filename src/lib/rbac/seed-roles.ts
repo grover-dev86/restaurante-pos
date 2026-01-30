@@ -2,7 +2,7 @@
  * Script para crear roles y permisos iniciales en la base de datos
  */
 import { prisma } from '@/lib/prisma'
-import { ROLE_PERMISSIONS, ROLES } from './permissions'
+import { ROLE_PERMISSIONS, ROLES, type Action } from './permissions'
 
 export async function seedRolesAndPermissions() {
   console.log('🌱 Seeding roles and permissions...')
@@ -13,7 +13,7 @@ export async function seedRolesAndPermissions() {
 
     Object.values(ROLE_PERMISSIONS).forEach((rolePerms) => {
       Object.entries(rolePerms).forEach(([resource, actions]) => {
-        actions.forEach((action) => {
+        ;(actions as readonly Action[]).forEach((action: Action) => {
           allPermissions.add(`${resource}:${action}`)
         })
       })
@@ -49,7 +49,7 @@ export async function seedRolesAndPermissions() {
       const permissionIds: string[] = []
 
       for (const [resource, actions] of Object.entries(rolePerms)) {
-        for (const action of actions) {
+        for (const action of actions as readonly Action[]) {
           const permission = await prisma.permission.findUnique({
             where: {
               resource_action: {

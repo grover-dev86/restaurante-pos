@@ -1,15 +1,22 @@
 import { ROLE_PERMISSIONS, type Action, type Resource, type RoleName } from './permissions'
 
+// Re-exportar tipos para uso externo
+export type { Action, Resource, RoleName }
+
+// Tipo para los permisos de un rol
+type RolePermissionsMap = Partial<Record<Resource, readonly Action[]>>
+
 /**
  * Verifica si un rol tiene permiso para realizar una acción en un recurso
  */
 export function checkPermission(role: string, resource: Resource, action: Action): boolean {
   // Si el rol no existe, denegar acceso
-  if (!ROLE_PERMISSIONS[role as RoleName]) {
+  const roleKey = role.toUpperCase() as RoleName
+  if (!(roleKey in ROLE_PERMISSIONS)) {
     return false
   }
 
-  const rolePermissions = ROLE_PERMISSIONS[role as RoleName]
+  const rolePermissions = ROLE_PERMISSIONS[roleKey] as RolePermissionsMap
   const resourcePermissions = rolePermissions[resource]
 
   // Si el recurso no está definido para este rol, denegar acceso
@@ -44,22 +51,24 @@ export function checkAllPermissions(
 /**
  * Obtiene todos los permisos de un rol
  */
-export function getRolePermissions(role: string) {
-  if (!ROLE_PERMISSIONS[role as RoleName]) {
+export function getRolePermissions(role: string): RolePermissionsMap {
+  const roleKey = role.toUpperCase() as RoleName
+  if (!(roleKey in ROLE_PERMISSIONS)) {
     return {}
   }
 
-  return ROLE_PERMISSIONS[role as RoleName]
+  return ROLE_PERMISSIONS[roleKey] as RolePermissionsMap
 }
 
 /**
  * Obtiene los permisos de un rol para un recurso específico
  */
-export function getResourcePermissions(role: string, resource: Resource): Action[] {
-  if (!ROLE_PERMISSIONS[role as RoleName]) {
+export function getResourcePermissions(role: string, resource: Resource): readonly Action[] {
+  const roleKey = role.toUpperCase() as RoleName
+  if (!(roleKey in ROLE_PERMISSIONS)) {
     return []
   }
 
-  const rolePermissions = ROLE_PERMISSIONS[role as RoleName]
+  const rolePermissions = ROLE_PERMISSIONS[roleKey] as RolePermissionsMap
   return rolePermissions[resource] || []
 }

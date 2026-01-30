@@ -10,7 +10,7 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript", "prettier"),
+  // Global ignores - must be in its own config object
   {
     ignores: [
       "node_modules/**",
@@ -19,9 +19,14 @@ const eslintConfig = [
       "build/**",
       "next-env.d.ts",
       "src/generated/**",
+      "**/src/generated/**",
       "*.config.js",
       "*.config.ts",
+      "*.config.mjs",
     ],
+  },
+  ...compat.extends("next/core-web-vitals", "next/typescript", "prettier"),
+  {
     rules: {
       // TypeScript
       "@typescript-eslint/no-unused-vars": [
