@@ -1,8 +1,6 @@
 'use client'
 
-import { useActionState } from 'react'
-import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useActionState, useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -13,17 +11,15 @@ import { Loader2, Eye, EyeOff, AlertCircle } from 'lucide-react'
 const initialState: LoginState = {}
 
 export function LoginForm() {
-  const router = useRouter()
   const [state, formAction, isPending] = useActionState(login, initialState)
   const [showPassword, setShowPassword] = useState(false)
 
   // Redirigir al dashboard cuando el login es exitoso
   useEffect(() => {
     if (state.success) {
-      router.push('/dashboard')
-      router.refresh()
+      window.location.href = '/dashboard'
     }
-  }, [state.success, router])
+  }, [state.success])
 
   return (
     <form action={formAction} className="space-y-4">
@@ -46,10 +42,9 @@ export function LoginForm() {
         <Input
           id="email"
           name="email"
-          type="email"
+          type="text"
           placeholder="tu@email.com"
           autoComplete="email"
-          required
           disabled={isPending}
           className="w-full"
         />
@@ -64,7 +59,6 @@ export function LoginForm() {
             type={showPassword ? 'text' : 'password'}
             placeholder="Tu contraseña"
             autoComplete="current-password"
-            required
             disabled={isPending}
             className="w-full pr-10"
           />
