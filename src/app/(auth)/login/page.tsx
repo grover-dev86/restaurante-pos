@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { LoginForm } from './login-form'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'Iniciar Sesión | Restaurante POS',
@@ -35,6 +36,11 @@ export default function LoginPage() {
         </CardHeader>
         <CardContent>
           <LoginForm />
+          <div className="mt-4 text-center text-sm">
+            <Link href="/forgot-password" className="text-primary hover:underline">
+              ¿Olvidaste tu contraseña?
+            </Link>
+          </div>
         </CardContent>
       </Card>
     </div>

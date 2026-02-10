@@ -22,7 +22,10 @@ export const authConfig: NextAuthConfig = {
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user
-      const isAuthPage = nextUrl.pathname.startsWith('/login')
+      const isAuthPage =
+        nextUrl.pathname.startsWith('/login') ||
+        nextUrl.pathname.startsWith('/forgot-password') ||
+        nextUrl.pathname.startsWith('/reset-password')
       const isPublicPage =
         nextUrl.pathname === '/' ||
         nextUrl.pathname.startsWith('/productos') ||
@@ -33,8 +36,8 @@ export const authConfig: NextAuthConfig = {
         return false // Redirige a signIn page
       }
 
-      // Si está logueado y trata de acceder a la página de login
-      if (isLoggedIn && isAuthPage) {
+      // Si está logueado y trata de acceder a la página de login (no aplica a forgot/reset)
+      if (isLoggedIn && nextUrl.pathname === '/login') {
         return Response.redirect(new URL('/dashboard', nextUrl))
       }
 
