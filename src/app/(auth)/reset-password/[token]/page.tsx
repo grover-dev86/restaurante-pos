@@ -1,9 +1,16 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Metadata } from 'next'
+import { AuthLayout } from '@/components/auth/auth-layout'
 import { ResetPasswordForm } from './reset-password-form'
 import { prisma } from '@/lib/prisma'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { AlertCircle } from 'lucide-react'
+import { AlertCircle, ShieldX } from 'lucide-react'
 import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+
+export const metadata: Metadata = {
+  title: 'Restablecer Contraseña | Restaurante POS',
+  description: 'Establece tu nueva contraseña',
+}
 
 interface ResetPasswordPageProps {
   params: Promise<{ token: string }>
@@ -17,54 +24,52 @@ export default async function ResetPasswordPage({ params }: ResetPasswordPagePro
     where: { token },
   })
 
-  const isValidToken =
-    resetToken && !resetToken.used && resetToken.expiresAt > new Date()
+  const isValidToken = resetToken && !resetToken.used && resetToken.expiresAt > new Date()
+
+  if (!isValidToken) {
+    return (
+      <AuthLayout
+        title="Enlace no válido"
+        description="El enlace de recuperación no es válido o ha expirado"
+        footerLink={{
+          text: '← Volver al inicio de sesión',
+          href: '/login',
+        }}
+      >
+        <div className="space-y-6">
+          <div className="flex justify-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10">
+              <ShieldX className="h-8 w-8 text-destructive" />
+            </div>
+          </div>
+          <Alert variant="destructive" className="border-destructive/50 bg-destructive/10">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription className="ml-2">
+              {resetToken?.used
+                ? 'Este enlace ya fue utilizado para restablecer la contraseña.'
+                : resetToken
+                  ? 'Este enlace ha expirado. Los enlaces son válidos por 1 hora.'
+                  : 'El enlace de recuperación es inválido.'}
+            </AlertDescription>
+          </Alert>
+          <Button asChild className="w-full">
+            <Link href="/forgot-password">Solicitar nuevo enlace</Link>
+          </Button>
+        </div>
+      </AuthLayout>
+    )
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">
-            Restablecer contraseña
-          </CardTitle>
-          <CardDescription className="text-center">
-            {isValidToken
-              ? 'Ingresa tu nueva contraseña'
-              : 'El enlace de recuperación no es válido'}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {isValidToken ? (
-            <ResetPasswordForm token={token} />
-          ) : (
-            <div className="space-y-4">
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>
-                  {resetToken?.used
-                    ? 'Este enlace ya fue utilizado.'
-                    : resetToken
-                      ? 'Este enlace ha expirado.'
-                      : 'El enlace de recuperación es inválido.'}
-                </AlertDescription>
-              </Alert>
-              <div className="text-center">
-                <Link
-                  href="/forgot-password"
-                  className="text-primary hover:underline text-sm"
-                >
-                  Solicitar un nuevo enlace de recuperación
-                </Link>
-              </div>
-            </div>
-          )}
-          <div className="mt-4 text-center text-sm">
-            <Link href="/login" className="text-primary hover:underline">
-              Volver al inicio de sesión
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+    <AuthLayout
+      title="Nueva contraseña"
+      description="Ingresa tu nueva contraseña para recuperar el acceso"
+      footerLink={{
+        text: '← Volver al inicio de sesión',
+        href: '/login',
+      }}
+    >
+      <ResetPasswordForm token={token} />
+    </AuthLayout>
   )
 }

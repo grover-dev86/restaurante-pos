@@ -43,75 +43,101 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* ============================================
+   🍽️ TEMA RESTAURANTE - Colores Cálidos
+   Naranja/Ámbar como primario (apetito, calidez)
+   ============================================ */
+
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --background: oklch(0.995 0.002 90);
+  --foreground: oklch(0.205 0.02 30);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.205 0.02 30);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --popover-foreground: oklch(0.205 0.02 30);
+
+  /* Primary: Naranja vibrante */
+  --primary: oklch(0.65 0.2 45);
+  --primary-foreground: oklch(0.995 0 0);
+
+  /* Secondary: Tono cálido suave */
+  --secondary: oklch(0.96 0.02 60);
+  --secondary-foreground: oklch(0.35 0.05 45);
+
+  /* Muted: Gris cálido */
+  --muted: oklch(0.96 0.01 60);
+  --muted-foreground: oklch(0.5 0.02 45);
+
+  /* Accent: Ámbar dorado */
+  --accent: oklch(0.88 0.15 85);
+  --accent-foreground: oklch(0.3 0.05 45);
+
+  /* Destructive: Rojo tomate */
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.98 0 0);
+
+  --border: oklch(0.9 0.02 60);
+  --input: oklch(0.92 0.01 60);
+  --ring: oklch(0.65 0.2 45);
+
+  /* Charts: Colores vibrantes para gráficos */
+  --chart-1: oklch(0.65 0.2 45);   /* Naranja */
+  --chart-2: oklch(0.6 0.15 160);  /* Verde */
+  --chart-3: oklch(0.55 0.2 25);   /* Rojo */
+  --chart-4: oklch(0.7 0.15 250);  /* Azul */
+  --chart-5: oklch(0.65 0.2 320);  /* Púrpura */
+
+  --radius: 0.75rem;
+
+  /* Sidebar */
+  --sidebar: oklch(0.25 0.03 45);
+  --sidebar-foreground: oklch(0.95 0 0);
+  --sidebar-primary: oklch(0.7 0.2 45);
+  --sidebar-primary-foreground: oklch(0.995 0 0);
+  --sidebar-accent: oklch(0.35 0.04 45);
+  --sidebar-accent-foreground: oklch(0.95 0 0);
+  --sidebar-border: oklch(0.35 0.03 45);
+  --sidebar-ring: oklch(0.65 0.2 45);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  --background: oklch(0.15 0.02 45);
+  --foreground: oklch(0.95 0.01 60);
+  --card: oklch(0.18 0.02 45);
+  --card-foreground: oklch(0.95 0.01 60);
+  --popover: oklch(0.18 0.02 45);
+  --popover-foreground: oklch(0.95 0.01 60);
+
+  /* Primary: Naranja más brillante en dark */
+  --primary: oklch(0.7 0.2 45);
+  --primary-foreground: oklch(0.15 0.02 45);
+
+  --secondary: oklch(0.25 0.02 45);
+  --secondary-foreground: oklch(0.9 0.01 60);
+  --muted: oklch(0.25 0.02 45);
+  --muted-foreground: oklch(0.65 0.02 60);
+  --accent: oklch(0.3 0.05 60);
+  --accent-foreground: oklch(0.95 0.01 60);
+  --destructive: oklch(0.5 0.2 25);
+  --destructive-foreground: oklch(0.95 0 0);
+  --border: oklch(0.3 0.02 45);
+  --input: oklch(0.25 0.02 45);
+  --ring: oklch(0.7 0.2 45);
+
+  --chart-1: oklch(0.7 0.2 45);
+  --chart-2: oklch(0.65 0.15 160);
+  --chart-3: oklch(0.6 0.2 25);
+  --chart-4: oklch(0.65 0.15 250);
+  --chart-5: oklch(0.6 0.2 320);
+
+  --sidebar: oklch(0.12 0.02 45);
+  --sidebar-foreground: oklch(0.95 0 0);
+  --sidebar-primary: oklch(0.7 0.2 45);
+  --sidebar-primary-foreground: oklch(0.15 0.02 45);
+  --sidebar-accent: oklch(0.25 0.03 45);
+  --sidebar-accent-foreground: oklch(0.95 0 0);
+  --sidebar-border: oklch(0.25 0.02 45);
+  --sidebar-ring: oklch(0.7 0.2 45);
 }
 
 @layer base {
