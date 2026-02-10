@@ -5,6 +5,7 @@ import { forgotPasswordSchema, resetPasswordSchema } from '@/lib/validations/aut
 import { randomBytes } from 'crypto'
 import bcrypt from 'bcryptjs'
 import { sendPasswordResetEmail } from '@/lib/email/send-password-reset'
+import { sendPasswordChangedEmail } from '@/lib/email/send-password-changed'
 
 export type ForgotPasswordState = {
   success?: boolean
@@ -189,6 +190,12 @@ export async function resetPassword(
         data: { used: true },
       }),
     ])
+
+    // Enviar email de confirmación de cambio
+    await sendPasswordChangedEmail({
+      email: user.email,
+      name: user.name,
+    })
 
     return {
       success: true,
