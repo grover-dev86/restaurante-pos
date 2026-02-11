@@ -52,7 +52,7 @@ const navItems: NavItem[] = [
   },
   {
     title: 'Roles',
-    href: '/dashboard/roles',
+    href: '/roles',
     icon: Shield,
     resource: RESOURCES.ROLES,
     action: ACTIONS.READ,
