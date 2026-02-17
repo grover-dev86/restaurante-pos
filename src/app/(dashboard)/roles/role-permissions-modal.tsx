@@ -7,14 +7,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
 import { Check, X, Shield } from 'lucide-react'
 
 interface Permission {
@@ -90,15 +82,15 @@ export function RolePermissionsModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+        <DialogHeader className="flex-shrink-0">
           <DialogTitle className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 flex-shrink-0">
               <Shield className="h-5 w-5 text-primary" />
             </div>
-            <div>
-              <span className="text-xl">{role.displayName}</span>
-              <p className="text-sm font-normal text-muted-foreground mt-1">
+            <div className="min-w-0">
+              <span className="text-xl block truncate">{role.displayName}</span>
+              <p className="text-sm font-normal text-muted-foreground mt-1 truncate">
                 {role.description || 'Sin descripción'}
               </p>
             </div>
@@ -108,78 +100,68 @@ export function RolePermissionsModal({
           </DialogDescription>
         </DialogHeader>
 
-        {/* Resumen */}
-        <div className="grid grid-cols-3 gap-4 py-4">
-          <div className="rounded-lg bg-muted/50 p-3 text-center">
-            <div className="text-2xl font-bold text-primary">{rolePermissionCount}</div>
-            <p className="text-xs text-muted-foreground">Permisos asignados</p>
+        <div className="flex-1 overflow-y-auto space-y-4">
+          {/* Resumen */}
+          <div className="grid grid-cols-3 gap-2 sm:gap-4">
+            <div className="rounded-lg bg-muted/50 p-2 sm:p-3 text-center">
+              <div className="text-lg sm:text-2xl font-bold text-primary">{rolePermissionCount}</div>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">Asignados</p>
+            </div>
+            <div className="rounded-lg bg-muted/50 p-2 sm:p-3 text-center">
+              <div className="text-lg sm:text-2xl font-bold">{totalPermissions}</div>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">Total</p>
+            </div>
+            <div className="rounded-lg bg-muted/50 p-2 sm:p-3 text-center">
+              <div className="text-lg sm:text-2xl font-bold">{percentage}%</div>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">Cobertura</p>
+            </div>
           </div>
-          <div className="rounded-lg bg-muted/50 p-3 text-center">
-            <div className="text-2xl font-bold">{totalPermissions}</div>
-            <p className="text-xs text-muted-foreground">Total disponibles</p>
-          </div>
-          <div className="rounded-lg bg-muted/50 p-3 text-center">
-            <div className="text-2xl font-bold">{percentage}%</div>
-            <p className="text-xs text-muted-foreground">Cobertura</p>
-          </div>
-        </div>
 
-        {/* Tabla de permisos */}
-        <div className="rounded-lg border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[180px]">Recurso</TableHead>
-                {ACTIONS.map((action) => (
-                  <TableHead key={action} className="text-center w-[100px]">
-                    {actionNames[action]}
-                  </TableHead>
-                ))}
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {resources.map((resource) => (
-                <TableRow key={resource}>
-                  <TableCell className="font-medium">
-                    {resourceNames[resource] || resource}
-                  </TableCell>
+          {/* Tabla de permisos - Vista móvil como lista */}
+          <div className="space-y-2">
+            {resources.map((resource) => (
+              <div key={resource} className="rounded-lg border p-3">
+                <h4 className="font-medium text-sm mb-2">
+                  {resourceNames[resource] || resource}
+                </h4>
+                <div className="flex flex-wrap gap-2">
                   {ACTIONS.map((action) => {
                     const has = hasPermission(resource, action)
                     return (
-                      <TableCell key={action} className="text-center">
+                      <div
+                        key={action}
+                        className={`flex items-center gap-1.5 px-2 py-1 rounded-full text-xs ${
+                          has
+                            ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                            : 'bg-gray-100 text-gray-400 dark:bg-gray-800'
+                        }`}
+                      >
                         {has ? (
-                          <div className="flex justify-center">
-                            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
-                              <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
-                            </div>
-                          </div>
+                          <Check className="h-3 w-3" />
                         ) : (
-                          <div className="flex justify-center">
-                            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
-                              <X className="h-4 w-4 text-gray-400" />
-                            </div>
-                          </div>
+                          <X className="h-3 w-3" />
                         )}
-                      </TableCell>
+                        <span>{actionNames[action]}</span>
+                      </div>
                     )
                   })}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Leyenda */}
-        <div className="flex items-center justify-center gap-6 pt-2 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2">
-            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
-              <Check className="h-3 w-3 text-green-600 dark:text-green-400" />
+        <div className="flex items-center justify-center gap-4 pt-3 border-t text-xs text-muted-foreground flex-shrink-0">
+          <div className="flex items-center gap-1.5">
+            <div className="flex h-4 w-4 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
+              <Check className="h-2.5 w-2.5 text-green-600 dark:text-green-400" />
             </div>
             <span>Permitido</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
-              <X className="h-3 w-3 text-gray-400" />
+          <div className="flex items-center gap-1.5">
+            <div className="flex h-4 w-4 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
+              <X className="h-2.5 w-2.5 text-gray-400" />
             </div>
             <span>No permitido</span>
           </div>

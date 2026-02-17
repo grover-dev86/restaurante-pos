@@ -188,11 +188,11 @@ function RoleFormContent({
           </p>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {Object.entries(permissionsByResource).map(([resource, permissions]) => (
-            <div key={resource} className="rounded-lg border p-4 space-y-3">
+            <div key={resource} className="rounded-lg border p-3 space-y-2">
               <h4 className="font-medium text-sm">{resourceNames[resource] || resource}</h4>
-              <div className="space-y-2">
+              <div className="flex flex-wrap gap-x-4 gap-y-2">
                 {permissions.map((permission) => {
                   const isChecked =
                     role?.permissions.some((p) => p.id === permission.id) ?? false
@@ -206,7 +206,7 @@ function RoleFormContent({
                       />
                       <Label
                         htmlFor={permission.id}
-                        className="text-sm font-normal cursor-pointer"
+                        className="text-sm font-normal cursor-pointer whitespace-nowrap"
                       >
                         {actionNames[permission.action] || permission.action}
                       </Label>
@@ -246,8 +246,8 @@ export function RoleFormModal({ open, onOpenChange, role, allPermissions }: Role
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
+        <DialogHeader className="flex-shrink-0">
           <DialogTitle>{isEditing ? 'Editar rol' : 'Crear nuevo rol'}</DialogTitle>
           <DialogDescription>
             {isEditing
@@ -257,15 +257,17 @@ export function RoleFormModal({ open, onOpenChange, role, allPermissions }: Role
         </DialogHeader>
 
         {/* Key única para forzar remontaje cuando cambia el rol */}
-        {open && (
-          <RoleFormContent
-            key={role?.id ?? 'new'}
-            role={role}
-            allPermissions={allPermissions}
-            onSuccess={handleSuccess}
-            onCancel={handleCancel}
-          />
-        )}
+        <div className="flex-1 overflow-y-auto">
+          {open && (
+            <RoleFormContent
+              key={role?.id ?? 'new'}
+              role={role}
+              allPermissions={allPermissions}
+              onSuccess={handleSuccess}
+              onCancel={handleCancel}
+            />
+          )}
+        </div>
       </DialogContent>
     </Dialog>
   )

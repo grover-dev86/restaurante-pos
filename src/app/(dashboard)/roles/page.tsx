@@ -37,7 +37,7 @@ export default async function RolesPage() {
   const totalPermissions = permissions.length
 
   return (
-    <div>
+    <div className="min-w-0">
       {/* Encabezado */}
       <div className="mb-8">
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
@@ -98,14 +98,14 @@ export default async function RolesPage() {
       </div>
 
       {/* Tabla de roles */}
-      <Card className="border-0 shadow-sm">
+      <Card className="border-0 shadow-sm overflow-hidden">
         <CardHeader>
           <CardTitle>Roles del Sistema</CardTitle>
           <CardDescription>
             Lista de todos los roles y sus permisos asignados
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0 sm:p-6">
           <RolesTable
             roles={roles}
             allPermissions={permissions}

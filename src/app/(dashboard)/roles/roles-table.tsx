@@ -224,7 +224,7 @@ export function RolesTable({ roles, allPermissions, userRole }: RolesTableProps)
   })
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 px-4 sm:px-0">
       {/* Toolbar */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <Input
@@ -250,8 +250,9 @@ export function RolesTable({ roles, allPermissions, userRole }: RolesTableProps)
       </div>
 
       {/* Table */}
-      <div className="rounded-lg border bg-card overflow-x-auto">
-        <Table className="min-w-[600px]">
+      <div className="rounded-lg border bg-card overflow-hidden -mx-4 sm:mx-0">
+        <div className="overflow-x-auto">
+          <Table className="min-w-[650px]">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -285,6 +286,7 @@ export function RolesTable({ roles, allPermissions, userRole }: RolesTableProps)
             )}
           </TableBody>
         </Table>
+        </div>
       </div>
 
       {/* Pagination */}
