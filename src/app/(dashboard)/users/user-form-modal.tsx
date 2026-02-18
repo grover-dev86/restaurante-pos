@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useActionState, useRef, useCallback } from 'react'
+import { useState, useEffect, useActionState, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { createUser, updateUser, type UserActionState } from '@/actions/users'
 import {
@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/select'
 import { useToast } from '@/hooks/use-toast'
 import { Loader2 } from 'lucide-react'
+import { AvatarUpload } from './avatar-upload'
 
 interface Role {
   id: string
@@ -34,6 +35,7 @@ interface User {
   name: string
   email: string
   phone: string | null
+  avatar: string | null
   roleId: string
 }
 
@@ -64,6 +66,7 @@ function UserFormContent({
   const { toast } = useToast()
   const isEditing = !!user
   const hasHandledResult = useRef(false)
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(user?.avatar ?? null)
 
   const formAction = isEditing ? updateUser.bind(null, user.id) : createUser
 
@@ -84,7 +87,14 @@ function UserFormContent({
   }, [state.success, state.message, toast, router, onSuccess])
 
   return (
-    <form action={dispatch} className="space-y-4">
+    <form action={dispatch} className="space-y-6">
+      {/* Avatar */}
+      <AvatarUpload
+        currentAvatar={user?.avatar ?? null}
+        onAvatarChange={(url) => setAvatarUrl(url)}
+      />
+      <input type="hidden" name="avatar" value={avatarUrl ?? ''} />
+
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="name">

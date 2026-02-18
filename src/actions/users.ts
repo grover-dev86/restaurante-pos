@@ -20,6 +20,7 @@ const createUserSchema = z.object({
     .max(100, 'La contraseña no puede tener más de 100 caracteres'),
   phone: z.string().optional(),
   roleId: z.string().min(1, 'Debe seleccionar un rol'),
+  avatar: z.string().optional(),
 })
 
 // Schema de validación para editar usuario
@@ -37,6 +38,7 @@ const updateUserSchema = z.object({
     .or(z.literal('')),
   phone: z.string().optional(),
   roleId: z.string().min(1, 'Debe seleccionar un rol'),
+  avatar: z.string().optional(),
 })
 
 export type UserActionState = {
@@ -123,6 +125,7 @@ export async function createUser(
     password: formData.get('password') as string,
     phone: (formData.get('phone') as string) || undefined,
     roleId: formData.get('roleId') as string,
+    avatar: (formData.get('avatar') as string) || undefined,
   }
 
   const validatedData = createUserSchema.safeParse(rawData)
@@ -157,6 +160,7 @@ export async function createUser(
         password: hashedPassword,
         phone: validatedData.data.phone,
         roleId: validatedData.data.roleId,
+        avatar: validatedData.data.avatar || null,
       },
     })
 
@@ -186,6 +190,7 @@ export async function updateUser(
     password: (formData.get('password') as string) || undefined,
     phone: (formData.get('phone') as string) || undefined,
     roleId: formData.get('roleId') as string,
+    avatar: (formData.get('avatar') as string) || undefined,
   }
 
   const validatedData = updateUserSchema.safeParse(rawData)
@@ -218,6 +223,7 @@ export async function updateUser(
     // Preparar datos de actualización
     const updateData: Record<string, unknown> = {
       name: validatedData.data.name,
+      avatar: validatedData.data.avatar || null,
       email: validatedData.data.email,
       phone: validatedData.data.phone,
       roleId: validatedData.data.roleId,

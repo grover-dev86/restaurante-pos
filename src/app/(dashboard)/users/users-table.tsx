@@ -13,6 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import Image from 'next/image'
 import { ArrowUpDown, MoreHorizontal, Pencil, Trash2, Eye, Plus, Power, User as UserIcon, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -133,8 +134,18 @@ export function UsersTable({
       ),
       cell: ({ row }) => (
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 flex-shrink-0">
-            <UserIcon className="h-4 w-4 text-primary" />
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 flex-shrink-0 overflow-hidden">
+            {row.original.avatar ? (
+              <Image
+                src={row.original.avatar}
+                alt={row.original.name}
+                width={36}
+                height={36}
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <UserIcon className="h-4 w-4 text-primary" />
+            )}
           </div>
           <div className="min-w-0">
             <div className="font-medium truncate">{row.original.name}</div>

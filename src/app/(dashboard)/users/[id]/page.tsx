@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, User, Mail, Phone, Shield, Calendar, Clock, Activity } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
@@ -52,8 +53,18 @@ export default async function UserDetailPage({ params }: UserDetailPageProps) {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-center mb-4">
-                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
-                  <User className="h-10 w-10 text-primary" />
+                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 overflow-hidden">
+                  {user.avatar ? (
+                    <Image
+                      src={user.avatar}
+                      alt={user.name}
+                      width={80}
+                      height={80}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <User className="h-10 w-10 text-primary" />
+                  )}
                 </div>
               </div>
 
