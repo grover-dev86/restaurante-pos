@@ -45,7 +45,7 @@ const navItems: NavItem[] = [
   },
   {
     title: 'Usuarios',
-    href: '/dashboard/users',
+    href: '/users',
     icon: Users,
     resource: RESOURCES.USERS,
     action: ACTIONS.READ,
