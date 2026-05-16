@@ -1,13 +1,32 @@
 'use client'
 
 import Image from 'next/image'
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useTransition } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Can } from '@/components/can'
 import { RESOURCES, ACTIONS } from '@/lib/rbac'
-import { Plus, FolderTree, Package, Pencil } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { useToast } from '@/hooks/use-toast'
+import { useRouter } from 'next/navigation'
+import { toggleCategoryActive } from '@/actions/categories'
+import {
+  Plus,
+  FolderTree,
+  Package,
+  Pencil,
+  MoreVertical,
+  Power,
+  Trash2,
+  Loader2,
+} from 'lucide-react'
 import { CategoryFormModal } from './category-form-modal'
 
 interface CategoryWithCount {
@@ -49,7 +68,6 @@ export function CategoriesGrid({ categories, userRole: _userRole }: CategoriesGr
     c.name.toLowerCase().includes(search.toLowerCase())
   )
 
-  // Opciones para el select de "Categoría padre" — derivado del prop
   const parentOptions = useMemo(
     () => categories.map((c) => ({ id: c.id, name: c.name })),
     [categories]
@@ -138,6 +156,22 @@ function CategoryCard({
   category: CategoryWithCount
   onEdit: () => void
 }) {
+  const router = useRouter()
+  const { toast } = useToast()
+  const [isPending, startTransition] = useTransition()
+
+  const handleToggleActive = () => {
+    startTransition(async () => {
+      const result = await toggleCategoryActive(category.id)
+      if (result.success) {
+        toast({ title: 'Éxito', description: result.message })
+        router.refresh()
+      } else {
+        toast({ title: 'Error', description: result.message, variant: 'destructive' })
+      }
+    })
+  }
+
   return (
     <div
       className={`group relative overflow-hidden rounded-xl border bg-card shadow-sm transition hover:shadow-md ${
@@ -175,18 +209,49 @@ function CategoryCard({
         <div className="flex items-start justify-between gap-2">
           <h3 className="font-semibold leading-tight">{category.name}</h3>
 
-          <Can resource={RESOURCES.CATEGORIES} action={ACTIONS.UPDATE}>
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              onClick={onEdit}
-              title="Editar categoría"
-              className="-mr-2 -mt-1 h-8 w-8 opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
-            >
-              <Pencil className="h-4 w-4" />
-            </Button>
-          </Can>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                disabled={isPending}
+                title="Acciones"
+                className="-mr-2 -mt-1 h-8 w-8"
+              >
+                {isPending ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <MoreVertical className="h-4 w-4" />
+                )}
+                <span className="sr-only">Acciones</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-44">
+              <Can resource={RESOURCES.CATEGORIES} action={ACTIONS.UPDATE}>
+                <DropdownMenuItem onClick={onEdit}>
+                  <Pencil className="mr-2 h-4 w-4" />
+                  Editar
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleToggleActive}>
+                  <Power className="mr-2 h-4 w-4" />
+                  {category.isActive ? 'Desactivar' : 'Activar'}
+                </DropdownMenuItem>
+              </Can>
+
+              <Can resource={RESOURCES.CATEGORIES} action={ACTIONS.DELETE}>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  disabled
+                  title="Próximamente"
+                  className="text-destructive focus:text-destructive"
+                >
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Eliminar
+                </DropdownMenuItem>
+              </Can>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         {category.parent && (
