@@ -1,13 +1,14 @@
 'use client'
 
 import Image from 'next/image'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Can } from '@/components/can'
 import { RESOURCES, ACTIONS } from '@/lib/rbac'
 import { Plus, FolderTree, Package, Pencil } from 'lucide-react'
+import { CategoryFormModal } from './category-form-modal'
 
 interface CategoryWithCount {
   id: string
@@ -29,64 +30,114 @@ interface CategoriesGridProps {
   userRole: string
 }
 
+type EditingCategory = {
+  id: string
+  name: string
+  description: string | null
+  image: string | null
+  parentId: string | null
+  order: number
+  isActive: boolean
+} | null
+
 export function CategoriesGrid({ categories, userRole: _userRole }: CategoriesGridProps) {
   const [search, setSearch] = useState('')
+  const [modalOpen, setModalOpen] = useState(false)
+  const [editingCategory, setEditingCategory] = useState<EditingCategory>(null)
 
   const filtered = categories.filter((c) =>
     c.name.toLowerCase().includes(search.toLowerCase())
   )
 
-  return (
-    <Card className="border-0 shadow-sm">
-      <CardContent className="p-4 sm:p-6 space-y-4">
-        {/* Barra de búsqueda + botón crear */}
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <input
-            type="text"
-            placeholder="Buscar por nombre…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="h-10 w-full sm:max-w-sm rounded-md border border-input bg-background px-3 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-          />
-          <Can resource={RESOURCES.CATEGORIES} action={ACTIONS.CREATE}>
-            <Button
-              type="button"
-              disabled
-              title="Próximamente"
-              className="w-full sm:w-auto"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Nueva categoría
-            </Button>
-          </Can>
-        </div>
+  // Opciones para el select de "Categoría padre" — derivado del prop
+  const parentOptions = useMemo(
+    () => categories.map((c) => ({ id: c.id, name: c.name })),
+    [categories]
+  )
 
-        {/* Estado vacío */}
-        {filtered.length === 0 ? (
-          <div className="py-16 text-center text-muted-foreground">
-            <FolderTree className="mx-auto mb-3 h-10 w-10 opacity-40" />
-            {categories.length === 0 ? (
-              <>
-                <p className="font-medium">Aún no hay categorías</p>
-                <p className="text-sm">Crea la primera para empezar a organizar tu menú</p>
-              </>
-            ) : (
-              <p className="font-medium">No se encontraron resultados para “{search}”</p>
-            )}
+  const openCreate = () => {
+    setEditingCategory(null)
+    setModalOpen(true)
+  }
+
+  const openEdit = (category: CategoryWithCount) => {
+    setEditingCategory({
+      id: category.id,
+      name: category.name,
+      description: category.description,
+      image: category.image,
+      parentId: category.parentId,
+      order: category.order,
+      isActive: category.isActive,
+    })
+    setModalOpen(true)
+  }
+
+  return (
+    <>
+      <Card className="border-0 shadow-sm">
+        <CardContent className="p-4 sm:p-6 space-y-4">
+          {/* Barra de búsqueda + botón crear */}
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <input
+              type="text"
+              placeholder="Buscar por nombre…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="h-10 w-full sm:max-w-sm rounded-md border border-input bg-background px-3 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            />
+            <Can resource={RESOURCES.CATEGORIES} action={ACTIONS.CREATE}>
+              <Button type="button" onClick={openCreate} className="w-full sm:w-auto">
+                <Plus className="mr-2 h-4 w-4" />
+                Nueva categoría
+              </Button>
+            </Can>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {filtered.map((category) => (
-              <CategoryCard key={category.id} category={category} />
-            ))}
-          </div>
-        )}
-      </CardContent>
-    </Card>
+
+          {/* Estado vacío */}
+          {filtered.length === 0 ? (
+            <div className="py-16 text-center text-muted-foreground">
+              <FolderTree className="mx-auto mb-3 h-10 w-10 opacity-40" />
+              {categories.length === 0 ? (
+                <>
+                  <p className="font-medium">Aún no hay categorías</p>
+                  <p className="text-sm">Crea la primera para empezar a organizar tu menú</p>
+                </>
+              ) : (
+                <p className="font-medium">No se encontraron resultados para “{search}”</p>
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {filtered.map((category) => (
+                <CategoryCard
+                  key={category.id}
+                  category={category}
+                  onEdit={() => openEdit(category)}
+                />
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <CategoryFormModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        category={editingCategory}
+        parentOptions={parentOptions}
+      />
+    </>
   )
 }
 
-function CategoryCard({ category }: { category: CategoryWithCount }) {
+function CategoryCard({
+  category,
+  onEdit,
+}: {
+  category: CategoryWithCount
+  onEdit: () => void
+}) {
   return (
     <div
       className={`group relative overflow-hidden rounded-xl border bg-card shadow-sm transition hover:shadow-md ${
@@ -129,9 +180,9 @@ function CategoryCard({ category }: { category: CategoryWithCount }) {
               type="button"
               variant="ghost"
               size="icon"
-              disabled
-              title="Próximamente"
-              className="-mr-2 -mt-1 h-8 w-8 opacity-0 group-hover:opacity-100"
+              onClick={onEdit}
+              title="Editar categoría"
+              className="-mr-2 -mt-1 h-8 w-8 opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
             >
               <Pencil className="h-4 w-4" />
             </Button>

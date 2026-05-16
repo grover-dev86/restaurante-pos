@@ -24,10 +24,35 @@ const createCategorySchema = z.object({
   image: z.string().optional().or(z.literal('')),
   parentId: z.string().optional().or(z.literal('')),
   order: z.coerce.number().int().min(0).optional(),
-  isActive: z.coerce.boolean().optional(),
+  isActive: z.boolean().optional(),
 })
 
 const updateCategorySchema = createCategorySchema
+
+/**
+ * Sentinel usado por el <Select> del modal cuando se elige "Ninguna categoría padre".
+ * Necesario porque shadcn <Select> no admite value="".
+ */
+const NO_PARENT_VALUE = '__none__'
+
+/**
+ * Normaliza el FormData del modal a los tipos que esperan los schemas Zod.
+ * - parentId === '__none__'      → undefined (categoría raíz)
+ * - isActive ausente en FormData → false (checkbox desmarcado)
+ * - isActive presente            → true
+ */
+function normalizeFormData(formData: FormData) {
+  const parentIdRaw = (formData.get('parentId') as string) || ''
+  return {
+    name: formData.get('name') as string,
+    description: (formData.get('description') as string) || undefined,
+    image: (formData.get('image') as string) || undefined,
+    parentId:
+      parentIdRaw && parentIdRaw !== NO_PARENT_VALUE ? parentIdRaw : undefined,
+    order: formData.get('order') || undefined,
+    isActive: formData.has('isActive'),
+  }
+}
 
 export type CategoryActionState = {
   success: boolean
@@ -131,15 +156,7 @@ export async function createCategory(
   if (!canCreate)
     return { success: false, message: 'No tienes permiso para crear categorías' }
 
-  const rawData = {
-    name: formData.get('name') as string,
-    description: (formData.get('description') as string) || undefined,
-    image: (formData.get('image') as string) || undefined,
-    parentId: (formData.get('parentId') as string) || undefined,
-    order: formData.get('order') || undefined,
-    isActive: formData.get('isActive') || undefined,
-  }
-
+  const rawData = normalizeFormData(formData)
   const validated = createCategorySchema.safeParse(rawData)
   if (!validated.success) {
     return {
@@ -195,15 +212,7 @@ export async function updateCategory(
   if (!canUpdate)
     return { success: false, message: 'No tienes permiso para editar categorías' }
 
-  const rawData = {
-    name: formData.get('name') as string,
-    description: (formData.get('description') as string) || undefined,
-    image: (formData.get('image') as string) || undefined,
-    parentId: (formData.get('parentId') as string) || undefined,
-    order: formData.get('order') || undefined,
-    isActive: formData.get('isActive') || undefined,
-  }
-
+  const rawData = normalizeFormData(formData)
   const validated = updateCategorySchema.safeParse(rawData)
   if (!validated.success) {
     return {
