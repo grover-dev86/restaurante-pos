@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useActionState, useRef, useCallback } from 'react'
+import { useEffect, useActionState, useRef, useCallback, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   createCategory,
@@ -27,7 +27,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useToast } from '@/hooks/use-toast'
-import { Loader2, ImagePlus } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
+import { CategoryImageUpload } from './category-image-upload'
 
 interface ParentOption {
   id: string
@@ -73,6 +74,7 @@ function CategoryFormContent({
   const { toast } = useToast()
   const isEditing = !!category
   const hasHandledResult = useRef(false)
+  const [imageUrl, setImageUrl] = useState<string | null>(category?.image ?? null)
 
   // En modo edición, una categoría no puede ser su propia padre
   const availableParents = isEditing
@@ -99,17 +101,12 @@ function CategoryFormContent({
 
   return (
     <form action={dispatch} className="space-y-5">
-      {/* Imagen (se conectará con Cloudinary en la próxima subtarea) */}
-      <div className="space-y-2">
-        <Label>Imagen</Label>
-        <div className="flex h-32 w-full items-center justify-center rounded-lg border-2 border-dashed bg-muted/40">
-          <div className="text-center text-muted-foreground">
-            <ImagePlus className="mx-auto mb-1 h-6 w-6" />
-            <p className="text-xs">Upload de imagen — próximamente</p>
-          </div>
-        </div>
-        <input type="hidden" name="image" value={category?.image ?? ''} />
-      </div>
+      {/* Imagen con upload a Cloudinary */}
+      <CategoryImageUpload
+        currentImage={category?.image ?? null}
+        onImageChange={(url) => setImageUrl(url)}
+      />
+      <input type="hidden" name="image" value={imageUrl ?? ''} />
 
       {/* Nombre */}
       <div className="space-y-2">
