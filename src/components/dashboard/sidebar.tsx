@@ -66,7 +66,7 @@ const navItems: NavItem[] = [
   },
   {
     title: 'Categorías',
-    href: '/dashboard/categories',
+    href: '/categories',
     icon: FolderTree,
     resource: RESOURCES.CATEGORIES,
     action: ACTIONS.READ,
