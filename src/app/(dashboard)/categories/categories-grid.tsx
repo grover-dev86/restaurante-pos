@@ -317,7 +317,8 @@ function SortableCategoryCard({
               {...attributes}
               {...listeners}
               aria-label="Arrastrar para reordenar"
-              className="absolute left-2 top-2 z-10 flex h-7 w-7 cursor-grab items-center justify-center rounded-md bg-black/40 text-white opacity-0 transition group-hover:opacity-100 active:cursor-grabbing"
+              title="Arrastrar para reordenar"
+              className="absolute left-2 top-2 z-10 flex h-8 w-8 cursor-grab touch-none items-center justify-center rounded-md bg-black/60 text-white shadow-md transition hover:bg-black/80 active:cursor-grabbing"
             >
               <GripVertical className="h-4 w-4" />
             </button>
@@ -366,14 +367,16 @@ function CategoryCard({
       }`}
     >
       {/* Imagen */}
-      <div className="relative aspect-video w-full bg-muted">
+      <div className="relative aspect-video w-full bg-muted select-none">
         {category.image ? (
           <Image
             src={category.image}
             alt={category.name}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            className="object-cover"
+            className="object-cover pointer-events-none select-none"
+            draggable={false}
+            onDragStart={(e) => e.preventDefault()}
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
