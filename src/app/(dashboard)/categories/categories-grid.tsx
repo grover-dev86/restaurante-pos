@@ -28,6 +28,7 @@ import {
   Loader2,
 } from 'lucide-react'
 import { CategoryFormModal } from './category-form-modal'
+import { DeleteCategoryDialog } from './delete-category-dialog'
 
 interface CategoryWithCount {
   id: string
@@ -59,10 +60,19 @@ type EditingCategory = {
   isActive: boolean
 } | null
 
+type DeletingCategory = {
+  id: string
+  name: string
+  productsCount: number
+  childrenCount: number
+} | null
+
 export function CategoriesGrid({ categories, userRole: _userRole }: CategoriesGridProps) {
   const [search, setSearch] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
   const [editingCategory, setEditingCategory] = useState<EditingCategory>(null)
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [deletingCategory, setDeletingCategory] = useState<DeletingCategory>(null)
 
   const filtered = categories.filter((c) =>
     c.name.toLowerCase().includes(search.toLowerCase())
@@ -89,6 +99,16 @@ export function CategoriesGrid({ categories, userRole: _userRole }: CategoriesGr
       isActive: category.isActive,
     })
     setModalOpen(true)
+  }
+
+  const openDelete = (category: CategoryWithCount) => {
+    setDeletingCategory({
+      id: category.id,
+      name: category.name,
+      productsCount: category._count.products,
+      childrenCount: category._count.children,
+    })
+    setDeleteOpen(true)
   }
 
   return (
@@ -132,6 +152,7 @@ export function CategoriesGrid({ categories, userRole: _userRole }: CategoriesGr
                   key={category.id}
                   category={category}
                   onEdit={() => openEdit(category)}
+                  onDelete={() => openDelete(category)}
                 />
               ))}
             </div>
@@ -145,6 +166,12 @@ export function CategoriesGrid({ categories, userRole: _userRole }: CategoriesGr
         category={editingCategory}
         parentOptions={parentOptions}
       />
+
+      <DeleteCategoryDialog
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
+        category={deletingCategory}
+      />
     </>
   )
 }
@@ -152,9 +179,11 @@ export function CategoriesGrid({ categories, userRole: _userRole }: CategoriesGr
 function CategoryCard({
   category,
   onEdit,
+  onDelete,
 }: {
   category: CategoryWithCount
   onEdit: () => void
+  onDelete: () => void
 }) {
   const router = useRouter()
   const { toast } = useToast()
@@ -242,8 +271,7 @@ function CategoryCard({
               <Can resource={RESOURCES.CATEGORIES} action={ACTIONS.DELETE}>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  disabled
-                  title="Próximamente"
+                  onClick={onDelete}
                   className="text-destructive focus:text-destructive"
                 >
                   <Trash2 className="mr-2 h-4 w-4" />
