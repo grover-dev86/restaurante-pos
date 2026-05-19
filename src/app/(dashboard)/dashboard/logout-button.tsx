@@ -60,8 +60,10 @@ export function LogoutButton() {
     // Esperar un momento para que se vea el toast
     await new Promise((resolve) => setTimeout(resolve, 1000))
 
-    // Cerrar sesión y redirigir al login
-    await signOut({ callbackUrl: '/login' })
+    // Cerrar sesión y redirigir al login.
+    // En NextAuth v5 el parámetro es `redirectTo` (en v4 era `callbackUrl`);
+    // si se usa el nombre viejo, NextAuth lo ignora y va al default (la home).
+    await signOut({ redirectTo: '/login' })
   }
 
   return (

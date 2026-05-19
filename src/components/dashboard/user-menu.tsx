@@ -58,7 +58,9 @@ export function UserMenu() {
       duration: 2000,
     })
     await new Promise((resolve) => setTimeout(resolve, 800))
-    await signOut({ callbackUrl: '/login' })
+    // En NextAuth v5 el parámetro es `redirectTo` (en v4 era `callbackUrl`).
+    // Si se usa el nombre viejo, NextAuth lo ignora y va al default (la home).
+    await signOut({ redirectTo: '/login' })
   }
 
   const name = session?.user?.name ?? 'Usuario'
