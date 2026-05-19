@@ -56,37 +56,42 @@ export default async function ProfilePage() {
 
       {/* Card "hero" del perfil */}
       <Card className="border-0 shadow-sm overflow-hidden">
-        <div className="h-24 bg-gradient-to-r from-orange-500 to-amber-500" />
-        <CardContent className="-mt-12 pb-6">
-          <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-end sm:gap-6">
-            {/* Avatar grande */}
-            <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-full border-4 border-background bg-muted shadow-md">
+        <div className="h-28 sm:h-32 bg-gradient-to-br from-orange-500 via-orange-500 to-amber-500" />
+        <CardContent className="pb-6">
+          <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:gap-6">
+            {/* Avatar — sale sobre el banner naranja */}
+            <div className="relative -mt-14 sm:-mt-16 h-28 w-28 flex-shrink-0 overflow-hidden rounded-full border-4 border-background bg-muted ring-1 ring-border shadow-lg">
               {profile.avatar ? (
                 <Image
                   src={profile.avatar}
                   alt={profile.name}
                   fill
-                  sizes="96px"
+                  sizes="112px"
                   className="object-cover"
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center bg-primary/10 text-2xl font-semibold text-primary">
+                <div className="flex h-full w-full items-center justify-center text-3xl font-semibold text-foreground/70">
                   {profile.name.charAt(0).toUpperCase()}
                 </div>
               )}
             </div>
 
-            {/* Info principal */}
-            <div className="flex-1 text-center sm:text-left">
-              <h2 className="text-xl font-bold">{profile.name}</h2>
-              <p className="text-sm text-muted-foreground">{profile.email}</p>
-              <div className="mt-2 flex flex-wrap items-center justify-center gap-2 sm:justify-start">
-                <Badge variant="secondary" className="gap-1">
+            {/* Info — siempre sobre el fondo blanco de la card, nunca sobre el banner */}
+            <div className="min-w-0 flex-1 text-center sm:pt-4 sm:text-left">
+              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+                {profile.name}
+              </h2>
+              <p className="mt-0.5 text-sm text-muted-foreground truncate">
+                {profile.email}
+              </p>
+              <div className="mt-3 flex flex-wrap items-center justify-center gap-2 sm:justify-start">
+                <Badge variant="secondary" className="gap-1 font-medium">
                   <Shield className="h-3 w-3" />
                   {profile.role.displayName}
                 </Badge>
                 {profile.isActive ? (
-                  <Badge className="bg-green-500/90 text-white hover:bg-green-500">
+                  <Badge className="gap-1 bg-emerald-500/15 text-emerald-700 hover:bg-emerald-500/20 dark:bg-emerald-500/20 dark:text-emerald-400">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                     Cuenta activa
                   </Badge>
                 ) : (
