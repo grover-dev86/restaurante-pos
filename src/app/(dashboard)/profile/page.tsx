@@ -76,8 +76,11 @@ export default async function ProfilePage() {
               )}
             </div>
 
-            {/* Info — en desktop va al lado del avatar sobre el banner (texto blanco con sombra). En mobile cae bajo el avatar en área blanca (texto normal). */}
-            <div className="min-w-0 flex-1 text-center sm:pb-2 sm:text-left">
+            {/* Info — en desktop va al lado del avatar sobre el banner (texto blanco con sombra). En mobile cae bajo el avatar en área blanca (texto normal).
+                El sm:pb-8 empuja el bloque visualmente arriba (items-end alinea
+                el padding al fondo del avatar), para que el email quede completamente
+                sobre el banner. Los badges quedan abajo con su propio fondo blanco. */}
+            <div className="min-w-0 flex-1 text-center sm:pb-8 sm:text-left">
               <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground sm:text-white sm:[text-shadow:0_2px_4px_rgba(0,0,0,0.35)]">
                 {profile.name}
               </h2>
