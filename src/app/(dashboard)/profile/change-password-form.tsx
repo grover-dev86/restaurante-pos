@@ -17,7 +17,10 @@ const initialState: ProfileActionState = {
 export function ChangePasswordForm() {
   const { toast } = useToast()
   const formRef = useRef<HTMLFormElement>(null)
-  const hasHandledResult = useRef(false)
+  // Rastrea el último objeto `state` ya procesado por referencia
+  // (useActionState retorna una referencia nueva en cada submit).
+  // Evita el doble disparo del toast al re-renderizar el componente.
+  const lastHandledState = useRef<ProfileActionState | null>(null)
   const [showCurrent, setShowCurrent] = useState(false)
   const [showNew, setShowNew] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
@@ -25,10 +28,11 @@ export function ChangePasswordForm() {
   const [state, dispatch, isPending] = useActionState(changeMyPassword, initialState)
 
   useEffect(() => {
-    if (!state.message || hasHandledResult.current) return
+    if (!state.message) return
+    if (lastHandledState.current === state) return
+    lastHandledState.current = state
 
     if (state.success) {
-      hasHandledResult.current = true
       toast({
         title: 'Contraseña actualizada',
         description: state.message,
@@ -38,17 +42,10 @@ export function ChangePasswordForm() {
       setShowCurrent(false)
       setShowNew(false)
       setShowConfirm(false)
-      setTimeout(() => {
-        hasHandledResult.current = false
-      }, 100)
     } else {
-      hasHandledResult.current = true
       toast({ title: 'Error', description: state.message, variant: 'destructive' })
-      setTimeout(() => {
-        hasHandledResult.current = false
-      }, 100)
     }
-  }, [state.success, state.message, toast])
+  }, [state, toast])
 
   return (
     <Card className="border-0 shadow-sm">

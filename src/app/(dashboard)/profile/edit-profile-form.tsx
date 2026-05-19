@@ -29,30 +29,26 @@ const initialState: ProfileActionState = {
 export function EditProfileForm({ profile }: EditProfileFormProps) {
   const router = useRouter()
   const { toast } = useToast()
-  const hasHandledResult = useRef(false)
+  // Rastrea el último objeto `state` ya procesado. useActionState
+  // devuelve una referencia nueva en cada submit, así que comparar por
+  // identidad evita disparar el toast varias veces tras router.refresh().
+  const lastHandledState = useRef<ProfileActionState | null>(null)
   const [avatarUrl, setAvatarUrl] = useState<string | null>(profile.avatar)
 
   const [state, dispatch, isPending] = useActionState(updateMyProfile, initialState)
 
   useEffect(() => {
-    if (!state.message || hasHandledResult.current) return
+    if (!state.message) return
+    if (lastHandledState.current === state) return
+    lastHandledState.current = state
 
     if (state.success) {
-      hasHandledResult.current = true
       toast({ title: 'Perfil actualizado', description: state.message })
       router.refresh()
-      // Reset el flag para permitir más envíos posteriores
-      setTimeout(() => {
-        hasHandledResult.current = false
-      }, 100)
     } else {
-      hasHandledResult.current = true
       toast({ title: 'Error', description: state.message, variant: 'destructive' })
-      setTimeout(() => {
-        hasHandledResult.current = false
-      }, 100)
     }
-  }, [state.success, state.message, toast, router])
+  }, [state, toast, router])
 
   return (
     <Card className="border-0 shadow-sm">
