@@ -56,11 +56,11 @@ export default async function ProfilePage() {
 
       {/* Card "hero" del perfil */}
       <Card className="border-0 shadow-sm overflow-hidden">
-        <div className="h-28 sm:h-32 bg-gradient-to-br from-orange-500 via-orange-500 to-amber-500" />
-        <CardContent className="pb-6">
-          <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:gap-6">
+        <div className="h-32 sm:h-36 bg-gradient-to-br from-orange-500 via-orange-500 to-amber-500" />
+        <CardContent className="-mt-14 sm:-mt-16 pb-6">
+          <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-end sm:gap-6">
             {/* Avatar — sale sobre el banner naranja */}
-            <div className="relative -mt-14 sm:-mt-16 h-28 w-28 flex-shrink-0 overflow-hidden rounded-full border-4 border-background bg-muted ring-1 ring-border shadow-lg">
+            <div className="relative h-28 w-28 flex-shrink-0 overflow-hidden rounded-full border-4 border-background bg-muted ring-1 ring-border shadow-lg">
               {profile.avatar ? (
                 <Image
                   src={profile.avatar}
@@ -76,21 +76,24 @@ export default async function ProfilePage() {
               )}
             </div>
 
-            {/* Info — siempre sobre el fondo blanco de la card, nunca sobre el banner */}
-            <div className="min-w-0 flex-1 text-center sm:pt-4 sm:text-left">
-              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+            {/* Info — en desktop va al lado del avatar sobre el banner (texto blanco con sombra). En mobile cae bajo el avatar en área blanca (texto normal). */}
+            <div className="min-w-0 flex-1 text-center sm:pb-2 sm:text-left">
+              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground sm:text-white sm:[text-shadow:0_2px_4px_rgba(0,0,0,0.35)]">
                 {profile.name}
               </h2>
-              <p className="mt-0.5 text-sm text-muted-foreground truncate">
+              <p className="mt-0.5 text-sm text-muted-foreground truncate sm:text-white/95 sm:[text-shadow:0_1px_3px_rgba(0,0,0,0.35)]">
                 {profile.email}
               </p>
               <div className="mt-3 flex flex-wrap items-center justify-center gap-2 sm:justify-start">
-                <Badge variant="secondary" className="gap-1 font-medium">
+                <Badge
+                  variant="secondary"
+                  className="gap-1 font-medium shadow-sm sm:bg-white/95 sm:text-foreground sm:hover:bg-white"
+                >
                   <Shield className="h-3 w-3" />
                   {profile.role.displayName}
                 </Badge>
                 {profile.isActive ? (
-                  <Badge className="gap-1 bg-emerald-500/15 text-emerald-700 hover:bg-emerald-500/20 dark:bg-emerald-500/20 dark:text-emerald-400">
+                  <Badge className="gap-1 bg-emerald-500/15 text-emerald-700 shadow-sm hover:bg-emerald-500/20 sm:bg-white/95 sm:text-emerald-700 sm:hover:bg-white dark:bg-emerald-500/20 dark:text-emerald-400">
                     <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                     Cuenta activa
                   </Badge>
