@@ -6,6 +6,7 @@ import { getMyProfile } from '@/actions/profile'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { EditProfileForm } from './edit-profile-form'
+import { ChangePasswordForm } from './change-password-form'
 import {
   User as UserIcon,
   Mail,
@@ -189,10 +190,8 @@ export default async function ProfilePage() {
         }}
       />
 
-      {/* Hint para próxima subtarea */}
-      <div className="rounded-md border border-dashed bg-muted/30 p-4 text-sm text-muted-foreground">
-        🛠️ La sección de <strong>cambiar contraseña</strong> se conectará en la próxima subtarea.
-      </div>
+      {/* Cambio de contraseña */}
+      <ChangePasswordForm />
     </div>
   )
 }
