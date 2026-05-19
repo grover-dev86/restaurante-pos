@@ -5,6 +5,7 @@ import { auth } from '@/lib/auth'
 import { getMyProfile } from '@/actions/profile'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { EditProfileForm } from './edit-profile-form'
 import {
   User as UserIcon,
   Mail,
@@ -174,14 +175,24 @@ export default async function ProfilePage() {
               value={formatDate(profile.updatedAt)}
             />
           </dl>
-
-          {/* Hint para próxima subtarea */}
-          <div className="mt-6 rounded-md border border-dashed bg-muted/30 p-4 text-sm text-muted-foreground">
-            🛠️ Los formularios de <strong>editar perfil</strong> y{' '}
-            <strong>cambiar contraseña</strong> se conectarán en las próximas subtareas.
-          </div>
         </CardContent>
       </Card>
+
+      {/* Formulario de edición */}
+      <EditProfileForm
+        profile={{
+          id: profile.id,
+          name: profile.name,
+          email: profile.email,
+          phone: profile.phone,
+          avatar: profile.avatar,
+        }}
+      />
+
+      {/* Hint para próxima subtarea */}
+      <div className="rounded-md border border-dashed bg-muted/30 p-4 text-sm text-muted-foreground">
+        🛠️ La sección de <strong>cambiar contraseña</strong> se conectará en la próxima subtarea.
+      </div>
     </div>
   )
 }
