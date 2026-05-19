@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import { updateMyProfile, type ProfileActionState } from '@/actions/profile'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -28,11 +29,13 @@ const initialState: ProfileActionState = {
 
 export function EditProfileForm({ profile }: EditProfileFormProps) {
   const router = useRouter()
+  const { update: updateSession } = useSession()
   const { toast } = useToast()
   // Rastrea el último objeto `state` ya procesado. useActionState
   // devuelve una referencia nueva en cada submit, así que comparar por
   // identidad evita disparar el toast varias veces tras router.refresh().
   const lastHandledState = useRef<ProfileActionState | null>(null)
+  const formRef = useRef<HTMLFormElement>(null)
   const [avatarUrl, setAvatarUrl] = useState<string | null>(profile.avatar)
 
   const [state, dispatch, isPending] = useActionState(updateMyProfile, initialState)
@@ -44,11 +47,22 @@ export function EditProfileForm({ profile }: EditProfileFormProps) {
 
     if (state.success) {
       toast({ title: 'Perfil actualizado', description: state.message })
+
+      // Refrescar la session de NextAuth con los valores nuevos para que
+      // el header (UserMenu) muestre el nombre y avatar actualizados sin
+      // necesidad de recargar la página o cerrar sesión.
+      const form = formRef.current
+      if (form) {
+        const formData = new FormData(form)
+        const newName = (formData.get('name') as string) || profile.name
+        updateSession({ name: newName, image: avatarUrl })
+      }
+
       router.refresh()
     } else {
       toast({ title: 'Error', description: state.message, variant: 'destructive' })
     }
-  }, [state, toast, router])
+  }, [state, toast, router, updateSession, avatarUrl, profile.name])
 
   return (
     <Card className="border-0 shadow-sm">
@@ -59,7 +73,7 @@ export function EditProfileForm({ profile }: EditProfileFormProps) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form action={dispatch} className="space-y-6">
+        <form ref={formRef} action={dispatch} className="space-y-6">
           {/* Avatar */}
           <div className="flex justify-center">
             <AvatarUpload

@@ -46,11 +46,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             return null
           }
 
-          // Retornar datos del usuario para la sesión
+          // Retornar datos del usuario para la sesión.
+          // `image` es campo estándar de NextAuth: lo poblamos con
+          // user.avatar para que aparezca en session.user.image
+          // automáticamente (NextAuth lo guarda como token.picture).
           return {
             id: user.id,
             email: user.email,
             name: user.name,
+            image: user.avatar,
             role: user.role.name,
             roleId: user.roleId,
           }

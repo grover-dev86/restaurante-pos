@@ -43,13 +43,24 @@ export const authConfig: NextAuthConfig = {
 
       return true
     },
-    async jwt({ token, user }) {
-      // Agregar datos adicionales al token JWT
+    async jwt({ token, user, trigger, session }) {
+      // En el login inicial, copiar datos del usuario al token
       if (user) {
         token.id = user.id
         token.role = user.role
         token.roleId = user.roleId
       }
+
+      // Cuando el cliente llama useSession().update({...}), NextAuth
+      // ejecuta este callback con trigger='update' y nos pasa los
+      // valores nuevos en `session`. Los usamos para actualizar el JWT
+      // sin necesidad de cerrar sesión.
+      if (trigger === 'update' && session && typeof session === 'object') {
+        const next = session as { name?: string | null; image?: string | null }
+        if (typeof next.name === 'string') token.name = next.name
+        if ('image' in next) token.picture = next.image ?? null
+      }
+
       return token
     },
     async session({ session, token }) {

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useSession, signOut } from 'next-auth/react'
 import { toast } from 'sonner'
 import {
@@ -63,10 +64,8 @@ export function UserMenu() {
   const name = session?.user?.name ?? 'Usuario'
   const email = session?.user?.email ?? ''
   const role = session?.user?.role ?? ''
+  const avatar = session?.user?.image ?? null
   const initial = name.charAt(0).toUpperCase()
-  // TODO: para mostrar el avatar real en el header habría que incluir
-  // user.avatar en el callback de session (auth.config.ts). Por ahora
-  // mostramos la inicial; el avatar completo se ve en /profile.
 
   return (
     <>
@@ -76,11 +75,21 @@ export function UserMenu() {
             type="button"
             className="flex items-center gap-2 sm:gap-3 rounded-full p-1 sm:py-1 sm:pr-3 sm:pl-1 hover:bg-muted transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            {/* Avatar (inicial) */}
+            {/* Avatar (imagen real si existe, sino la inicial) */}
             <div className="relative h-9 w-9 flex-shrink-0 overflow-hidden rounded-full bg-primary/10 text-primary">
-              <div className="flex h-full w-full items-center justify-center text-sm font-semibold">
-                {initial}
-              </div>
+              {avatar ? (
+                <Image
+                  src={avatar}
+                  alt={name}
+                  fill
+                  sizes="36px"
+                  className="object-cover"
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center text-sm font-semibold">
+                  {initial}
+                </div>
+              )}
             </div>
 
             {/* Nombre + rol (solo en desktop) */}
