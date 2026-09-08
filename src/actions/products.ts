@@ -133,6 +133,18 @@ export async function getCategoriesForProductSelect() {
   })
 }
 
+/**
+ * Todas las categorías (incluidas inactivas) para el <Select> de filtro
+ * de la tabla de productos. Un producto puede pertenecer a una categoría
+ * inactiva y el admin quiere poder filtrarlo igualmente.
+ */
+export async function getAllCategoriesForFilter() {
+  return prisma.category.findMany({
+    select: { id: true, name: true, isActive: true },
+    orderBy: { name: 'asc' },
+  })
+}
+
 // ==========================================
 // Mutaciones
 // ==========================================

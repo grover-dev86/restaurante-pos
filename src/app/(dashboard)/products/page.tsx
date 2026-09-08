@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { checkPermission } from '@/lib/rbac'
-import { getAllProducts } from '@/actions/products'
+import { getAllProducts, getAllCategoriesForFilter } from '@/actions/products'
 import { ProductsTable } from './products-table'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
@@ -18,7 +18,10 @@ export default async function ProductsPage() {
   const canView = checkPermission(session.user.role || '', 'products', 'read')
   if (!canView) redirect('/dashboard')
 
-  const products = await getAllProducts()
+  const [products, categories] = await Promise.all([
+    getAllProducts(),
+    getAllCategoriesForFilter(),
+  ])
 
   return (
     <div className="min-w-0 space-y-6">
@@ -39,7 +42,7 @@ export default async function ProductsPage() {
           <CardDescription>Lista completa de productos registrados</CardDescription>
         </CardHeader>
         <CardContent className="p-0 sm:p-6">
-          <ProductsTable products={products} />
+          <ProductsTable products={products} categories={categories} />
         </CardContent>
       </Card>
     </div>
