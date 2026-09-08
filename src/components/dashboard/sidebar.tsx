@@ -59,7 +59,7 @@ const navItems: NavItem[] = [
   },
   {
     title: 'Productos',
-    href: '/dashboard/products',
+    href: '/products',
     icon: Package,
     resource: RESOURCES.PRODUCTS,
     action: ACTIONS.READ,
