@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
   type ColumnDef,
   type SortingState,
@@ -20,7 +20,9 @@ import {
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { ArrowUpDown, ChevronLeft, ChevronRight, Package } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { ArrowUpDown, ChevronLeft, ChevronRight, Package, Search, X } from 'lucide-react'
+import { useDebounce } from '@/hooks/use-debounce'
 
 // Shape del producto tal como lo devuelve getAllProducts()
 export interface ProductRow {
@@ -121,9 +123,22 @@ const columns: ColumnDef<ProductRow>[] = [
 
 export function ProductsTable({ products }: ProductsTableProps) {
   const [sorting, setSorting] = useState<SortingState>([])
+  const [search, setSearch] = useState('')
+  const debouncedSearch = useDebounce(search, 300)
+
+  // Filtro por nombre o código de barras (case-insensitive)
+  const filteredProducts = useMemo(() => {
+    const term = debouncedSearch.trim().toLowerCase()
+    if (!term) return products
+    return products.filter((p) => {
+      if (p.name.toLowerCase().includes(term)) return true
+      if (p.barcode && p.barcode.toLowerCase().includes(term)) return true
+      return false
+    })
+  }, [products, debouncedSearch])
 
   const table = useReactTable({
-    data: products,
+    data: filteredProducts,
     columns,
     state: { sorting },
     onSortingChange: setSorting,
@@ -133,7 +148,7 @@ export function ProductsTable({ products }: ProductsTableProps) {
     initialState: { pagination: { pageSize: 10 } },
   })
 
-  // Estado vacío completo (0 productos en total)
+  // Estado vacío completo (0 productos en total, sin filtro)
   if (products.length === 0) {
     return (
       <div className="py-16 text-center text-muted-foreground">
@@ -146,68 +161,105 @@ export function ProductsTable({ products }: ProductsTableProps) {
 
   return (
     <div className="space-y-4">
-      <div className="rounded-md border overflow-x-auto">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(header.column.columnDef.header, header.getContext())}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+      {/* Barra de búsqueda */}
+      <div className="relative max-w-md">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+        <Input
+          type="text"
+          placeholder="Buscar por nombre o código de barras…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="pl-9 pr-9"
+        />
+        {search && (
+          <button
+            type="button"
+            onClick={() => setSearch('')}
+            className="absolute right-2 top-1/2 -translate-y-1/2 flex h-6 w-6 items-center justify-center rounded text-muted-foreground hover:bg-muted hover:text-foreground transition"
+            aria-label="Limpiar búsqueda"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        )}
       </div>
 
-      {/* Paginación */}
-      {table.getPageCount() > 1 && (
-        <div className="flex items-center justify-between gap-2 px-2">
-          <p className="text-sm text-muted-foreground">
-            Mostrando {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}
-            {' - '}
-            {Math.min(
-              (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
-              products.length
-            )}{' '}
-            de {products.length}
+      {/* Estado vacío filtrado (hay productos pero ninguno matchea) */}
+      {filteredProducts.length === 0 ? (
+        <div className="py-16 text-center text-muted-foreground">
+          <Search className="mx-auto mb-3 h-10 w-10 opacity-40" />
+          <p className="font-medium">
+            No se encontraron resultados para “{debouncedSearch}”
           </p>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Anterior
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              Siguiente
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
+          <p className="text-sm">Prueba con otro término o limpia la búsqueda.</p>
         </div>
+      ) : (
+        <>
+          <div className="rounded-md border overflow-x-auto">
+            <Table>
+              <TableHeader>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <TableHead key={header.id}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(header.column.columnDef.header, header.getContext())}
+                      </TableHead>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableHeader>
+              <TableBody>
+                {table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+
+          {/* Paginación */}
+          {table.getPageCount() > 1 && (
+            <div className="flex items-center justify-between gap-2 px-2">
+              <p className="text-sm text-muted-foreground">
+                Mostrando{' '}
+                {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}
+                {' - '}
+                {Math.min(
+                  (table.getState().pagination.pageIndex + 1) *
+                    table.getState().pagination.pageSize,
+                  filteredProducts.length
+                )}{' '}
+                de {filteredProducts.length}
+              </p>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => table.previousPage()}
+                  disabled={!table.getCanPreviousPage()}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  Anterior
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => table.nextPage()}
+                  disabled={!table.getCanNextPage()}
+                >
+                  Siguiente
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   )
